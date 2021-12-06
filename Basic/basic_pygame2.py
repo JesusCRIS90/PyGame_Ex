@@ -24,6 +24,36 @@ CYAN        = ( 0, 255, 255 )
 MAGENTA     = ( 255, 0, 255 )
 
 
+VELOCITY = 10
+
+def Move_Rect( rect2move, key_event ):
+    
+        if key_event.key == pygame.K_LEFT:
+            rect2move.x -= VELOCITY
+        
+        if key_event.key == pygame.K_RIGHT:
+            rect2move.x += VELOCITY
+            
+        if key_event.key == pygame.K_UP:
+            rect2move.y -= VELOCITY
+            
+        if key_event.key == pygame.K_DOWN:
+            rect2move.y += VELOCITY
+
+def Move_Rect_Mirror( rect2move, key_event ):
+        
+        if key_event.key == pygame.K_LEFT:
+            rect2move.x += VELOCITY
+        
+        if key_event.key == pygame.K_RIGHT:
+            rect2move.x -= VELOCITY
+            
+        if key_event.key == pygame.K_UP:
+            rect2move.y -= VELOCITY
+            
+        if key_event.key == pygame.K_DOWN:
+            rect2move.y += VELOCITY
+
 
 # Initialize pygame
 pygame.init()
@@ -37,12 +67,12 @@ pygame.display.set_caption("Hello World - Images")
 dislay_surface.fill( BLACK )
 
 # Loading Images
-dragon_left_image = pygame.image.load( "Assets/dragon_left.png" )
+dragon_left_image = pygame.image.load( "Assets/dragon_right.png" )
 dragon_left_rect  = dragon_left_image.get_rect()
 dragon_left_rect.topleft = ( 0, 0 )
 
 
-dragon_right_image = pygame.image.load( "Assets/dragon_right.png" )
+dragon_right_image = pygame.image.load( "Assets/dragon_left.png" )
 dragon_right_rect  = dragon_right_image.get_rect()
 dragon_right_rect.topright = ( WINDOW_WIDTH, 0 )
 
@@ -61,19 +91,33 @@ Background_Music = pygame.mixer_music.load( "Assets/music.wav" )
 pygame.mixer.music.play( -1 )
 
 
+
+# dislay_surface.blit(dragon_left_image, dragon_left_rect )
+# dislay_surface.blit(dragon_right_image, dragon_right_rect )
+# pygame.display.update()
+
+
+
 # The main game loop
 running = True
 while running:
     # Loop through a list of Event Objects that have occured
     for event in pygame.event.get():
-        print( event )
+        # print( event )
         if event.type == pygame.QUIT:
             running = False
             pygame.mixer.music.stop()
             End_sound.play()
             pygame.time.delay( 1000 )
-            
-            
+        
+        if event.type == pygame.KEYDOWN:
+            Move_Rect( dragon_left_rect, event )
+            Move_Rect_Mirror( dragon_right_rect, event )
+        
+        
+    # Fill the display surface to cover old images
+    dislay_surface.fill( BLACK )    
+        
     # Drawing Images and Text in Surface
     dislay_surface.blit(dragon_left_image, dragon_left_rect )
     dislay_surface.blit(dragon_right_image, dragon_right_rect )
