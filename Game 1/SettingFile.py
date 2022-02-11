@@ -4,6 +4,9 @@ In this file we make the definition of all Setting for the game
 
 """
 
+import pygame
+
+
 # Game Name
 GAME_NAME = "Feed the dragon"
 
@@ -14,9 +17,9 @@ WINDOW_WIDTH = 1000 ; WINDOW_HEIGTH = 400
 FPS = 60
 
 # Settings game values
-PLAYER_STARTING_LIVES = 5
-PLAYER_VELOCITY = 5
-COINS_STARTING_VELOCITY = 5
+PLAYER_STARTING_LIVES = 10
+PLAYER_VELOCITY = 10
+COINS_STARTING_VELOCITY = 10
 COINS_ACCELERATION = .5
 BUFFER_DISTANCE = -100
 
@@ -34,6 +37,7 @@ MAGENTA     = ( 255, 0, 255 )
 # Settings FONTS
 FONT_FILE = 'Assets/AttackGraffiti.ttf'
 FONT_SIZE = 32
+
 
 # Set Music and Sounds
 COIN_SOUND = "Assets/coin_sound.wav"
