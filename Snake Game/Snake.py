@@ -25,12 +25,13 @@ class Snake( pygame.sprite.Sprite ):
         self.headRect = pygame.draw.rect( self.surface_display, STF.GREEN, self.headCoord )
     
         
-    def update( self ):
-        """Update the snake Class"""
-        # self.MoveSnake( event )
-        self.UpdateBodySnake()
-        self.UpdateSnakeHead()
-        self.DrawSnake()
+    # # Este metodo no sirve
+    # def update( self ):
+    #     """Update the snake Class"""
+    #     # self.MoveSnake( event )
+    #     self.UpdateBodySnake()
+    #     self.UpdateSnakeHead()
+    #     self.DrawSnake()
 
     
     def MoveSnake( self, event:pygame.event ):
@@ -64,25 +65,41 @@ class Snake( pygame.sprite.Sprite ):
         self.headCoord = ( head_x, head_y, SNAKE_SIZE, SNAKE_SIZE )
         
     def DrawSnake( self ):
-
         #Blit assets
         for body in self.bodyCoord:
             # pygame.draw.rect(display_surface, DARKGREEN, body)
             pygame.draw.rect( self.surface_display, STF.GREEN, body )
         self.headRect = pygame.draw.rect( self.surface_display, STF.GREEN, self.headCoord )
         
+    def Reset( self ):
+        self.dx = 0
+        self.dy = 0
+        self.bodyCoord = []
+        self.headCoord = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGTH//2 + 100 , SNAKE_SIZE, SNAKE_SIZE )
         
-        
-        
-        
-        
-        
-        
-        
-        
+    def IsSnakeGameOver( self ):
+        if self.__Is_SnakeCollide_ItSelf__():
+            return True
+        if self.__Is_Snake_OutScreen__():
+            return True
+        return False
+    
+    def __Is_SnakeCollide_ItSelf__( self ):
+        if self.headCoord in self.bodyCoord:
+            return True      
+        return False
 
+    def __Is_Snake_OutScreen__( self ):
+        if self.headRect.left < 0:
+            return True
+        if self.headRect.right > STF.WINDOW_WIDTH:
+            return True
+        if self.headRect.top < 0:
+            return True
+        if self.headRect.bottom > STF.WINDOW_HEIGTH:
+            return True
+        return False
         
-
    
     
     
