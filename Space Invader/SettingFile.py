@@ -34,3 +34,4 @@ FONT_SIZE = 64
 
 
 # Maximun Number of Player Bullet
+MAX_PLAYER_BULLETS = 2

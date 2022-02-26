@@ -8,24 +8,7 @@ This class is the blueprint for the Space Invader HUB representation in the game
 
 import pygame
 import SettingFile as STF
-# from enum import Enum, unique, IntEnum
 import InGame_Parameters as IGP
-
-
-# """ ENUMS """
-# @unique
-# class GAME_STATES( IntEnum ):
-#     RUNNING         = 0
-#     GAME_OVER       = 1
-#     INIT            = 2
-
-# """
-#     Dictionary with main parameters of game
-# """
-# GAME_PARAMETERS = {
-#     "Round": 1,
-#     "GameState": GAME_STATES.INIT
-# }
 
 
 class GameHUD():
@@ -54,6 +37,10 @@ class GameHUD():
         self.game_over_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 - 1*STF.FONT_SIZE )
 
 
+       # Text for GameOver and Reset Screen
+        self._updateScore_()
+        self._updateLives_()
+
 
     def update( self ):
         if IGP.GAME_PARAMETERS["GameState"] == IGP.GAME_STATES.INIT:
@@ -76,12 +63,31 @@ class GameHUD():
 
     def draw_GameScreen( self ):
         "Update the Game HUB Screen"
-        pass
+        self._updateScore_()
+        self._updateLives_()
+        self._updateRoundNumber_()
+        self.surface_display.blit( self.score_text, self.score_rect )
+        self.surface_display.blit( self.lives_text, self.lives_rect )
+        self.surface_display.blit( self.round_text, self.round_rect )
+        pygame.draw.line(self.surface_display, STF.WHITE, (0, STF.FONT_SIZE + 10 ), ( STF.WINDOW_WIDTH, STF.FONT_SIZE + 10 ), 4)
+        pygame.draw.line(self.surface_display, STF.WHITE, (0, STF.WINDOW_HEIGHT - 100), (STF.WINDOW_WIDTH, STF.WINDOW_HEIGHT - 100), 4)
 
     def _updateRoundNumber_( self ):
         self.round_text = self.font.render("Round: " + str( IGP.GAME_PARAMETERS["Round"] ), True, STF.WHITE )
         self.round_rect = self.round_text.get_rect()
-        self.round_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 + 0*STF.FONT_SIZE )
+        if IGP.GAME_PARAMETERS["GameState"] == IGP.GAME_STATES.INIT:
+            self.round_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 + 0*STF.FONT_SIZE )
+        if IGP.GAME_PARAMETERS["GameState"] == IGP.GAME_STATES.RUNNING:
+            self.round_rect.topleft = (20, 10)
 
+    def _updateScore_( self ):
+        self.score_text = self.font.render("Score: " + str( IGP.GAME_PARAMETERS["Score"] ), True, STF.WHITE)
+        self.score_rect = self.score_text.get_rect()
+        self.score_rect.centerx = STF.WINDOW_WIDTH//2
+        self.score_rect.top = 10
 
+    def _updateLives_( self ):
+        self.lives_text = self.font.render("Lives: " + str( IGP.GAME_PARAMETERS["Lives"] ), True, STF.WHITE)
+        self.lives_rect = self.lives_text.get_rect()
+        self.lives_rect.topright = (STF.WINDOW_WIDTH - 20, 10)
         
