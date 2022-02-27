@@ -21,7 +21,7 @@ class SpaceInvader( SKG.Game ):
         super().__init__()
         self.game_hud = Game_HUD.GameHUD( self.display_surface )
 
-        #Set sounds and music
+    #Set sounds and music
         self.new_round_sound = pygame.mixer.Sound("Assets/new_round.wav")
         self.breach_sound = pygame.mixer.Sound("Assets/breach.wav")
         self.alien_hit_sound = pygame.mixer.Sound("Assets/alien_hit.wav")
@@ -36,14 +36,10 @@ class SpaceInvader( SKG.Game ):
 
 
     def __CreatePlayer__( self ):
-        # self.player_bullet_group = pygame.sprite.Group()
-        # self.player_group = pygame.sprite.Group( )
         self.player = Player.Player( self.player_bullet_group )
         self.player_group.add( self.player )
 
     def __CreateEnemies__( self ):
-        # self.alien_bullet_group = pygame.sprite.Group()
-        # self.alien_group = pygame.sprite.Group()
         #Create a grid of Aliens 11 columns and 5 rows.  
         for i in range(11):
             for j in range(5):
@@ -53,19 +49,17 @@ class SpaceInvader( SKG.Game ):
                 self.alien_group.add( alien )
 
     def __UpdateGameState__( self ):
+        """
+            Update Logic Game each Frame Game. This is the function that the base clase
+            Game is executation countinously inside the loop game
+        """
         
         # Fill the display surface to cover old images
         self.display_surface.fill( STF.BLACK )   
 
         # WRITE HERE LOGIC GAME
         gamestate = IGP.GAME_PARAMETERS["GameState"]
-        # if gamestate == IGP.GAME_STATES.RUNNING:
-        #     self._UpdatePlayer_()
-        #     self._UpdatePlayerBullet_()
-
-
-        # self.game_hud.update()
-
+        # Update the game in function of the GameState Current
         self._UpdateGame_InFunctionGameSate_( gamestate )
 
         # Update Clock Game
@@ -73,10 +67,12 @@ class SpaceInvader( SKG.Game ):
         self.clockGame.tick( STF.FPS )
 
     def _UpdatePlayer_( self ):
+        """Update the Player"""
         self.player_group.update()
         self.player_group.draw( self.display_surface )
     
     def _UpdatePlayerBullet_( self ):
+        """Update the Player Bullet"""
         self.player_bullet_group.update()
         self.player_bullet_group.draw( self.display_surface )
     
@@ -87,11 +83,40 @@ class SpaceInvader( SKG.Game ):
         self.alien_group.draw( self.display_surface )
     
     def _UpdateEnemiesBullet_( self ):
+        """Update the Enemies Bullet"""
         self.alien_bullet_group.update()
         self.alien_bullet_group.draw( self.display_surface )
+
+    def _CheckCollisions_( self ):
+        """Check for collisions"""
+        #See if any bullet in the player bullet group hit an alien in the alien group
+        if pygame.sprite.groupcollide(self.player_bullet_group, self.alien_group, True, True):
+            self.alien_hit_sound.play()
+            IGP.GAME_PARAMETERS[ "Score" ] += 100
+
+        #See if the player has collided with any bullet in the alien bullet group
+        if pygame.sprite.spritecollide(self.player, self.alien_bullet_group, True):
+            self.player_hit_sound.play()
+            IGP.GAME_PARAMETERS[ "Lives" ] -= 1
     
+    def _CheckLivesRemained_( self ):
+        """Check if player has no lives remained"""
+        if IGP.GAME_PARAMETERS[ "Lives" ] <= 0:
+            IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.GAME_OVER
+
+    def _CheckRoundCompletation_( self ):
+        """Check to see if a player has completed a single round"""
+        #If the alien group is empty, you've completed the round
+        if not ( self.alien_group ):
+            IGP.GAME_PARAMETERS[ "Score" ] += 1000 * IGP.GAME_PARAMETERS[ "Round" ]
+            IGP.GAME_PARAMETERS[ "Round" ] += 1
+            IGP.GAME_PARAMETERS[ "Lives" ] += 1
+            # self._CreateNewRound_()
+            # IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.GAME_OVER
+            IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.NEXTROUND
 
     def _UpdateGame_InFunctionGameSate_( self, game_state ):
+        """Update the game in function of the current state of the game"""
         if game_state == IGP.GAME_STATES.INIT:
             self.game_hud.draw_Init_Screen()
         if game_state == IGP.GAME_STATES.RUNNING:
@@ -100,17 +125,19 @@ class SpaceInvader( SKG.Game ):
             self.game_hud.draw_GameOver_Screen()
         if game_state == IGP.GAME_STATES.MOVE2RUNNING:
             self._InitilizeGame_()
-        if game_state == IGP.GAME_STATES.MOVE2GAMEOVER:
-            self._FinalizeGame_()
+        if game_state == IGP.GAME_STATES.MOVE2NEWROUND:
+            self._CreateNewRound_()
+        if game_state == IGP.GAME_STATES.NEXTROUND:
+            self.game_hud.draw_Init_Screen()
+        
 
     def _InitilizeGame_( self ):
+        """Initilize the game"""
         self._Reset_Game_()
         self.__CreatePlayer__()
         self.__CreateEnemies__()
         IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.RUNNING
-    
-    def CreateNewRound_( self ):
-        pass
+
 
     def _ShiftAliens_( self ):
         """Shift a wave of aliens down the screen and reverse direction"""
@@ -139,23 +166,31 @@ class SpaceInvader( SKG.Game ):
                 IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.GAME_OVER
                 # self.check_game_status("Aliens breached the line!", "Press 'Enter' to continue")
 
-    def _FinalizeGame_( self ):
-        
-        pass
     
     def _UpdateGame_( self ):
+        """Update the Game Logic when the state is RUNNING"""
         # Update Player
         self._UpdatePlayer_()
         self._UpdatePlayerBullet_()
+        
         # Update Enemies
         self._UpdateEnemies_()
         self._UpdateEnemiesBullet_()
+
+        # CheckCollision
+        self._CheckCollisions_()
+        
+        # Check Round Completation
+        self._CheckRoundCompletation_()
+        
+        # Check Lives Remained
+        self._CheckLivesRemained_()
 
         # Update Game HUD
         self.game_hud.update()
 
     def _Reset_Game_( self ):
-        
+        """RESET THE GAME"""
         # Reset game values
         IGP.GAME_PARAMETERS["Score"] = 0
         IGP.GAME_PARAMETERS["Round"] = 1
@@ -169,9 +204,23 @@ class SpaceInvader( SKG.Game ):
 
         # Move GameState to MOVE2RUNNING
         IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.MOVE2RUNNING
+
+    def _CreateNewRound_( self ):
+        """Create New Round"""
+        # Empty groups
+        self.alien_group.empty()
+        self.alien_bullet_group.empty()
+        self.player_bullet_group.empty()
+        self.player_group.empty()
+        
+        # Create Player and Enemies
+        self.__CreatePlayer__()
+        self.__CreateEnemies__()
+        IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.RUNNING
         
 
     def _CheckingEvents_( self ):
+        """Checking Player Events"""
         # Loop through a list of Event Objects that have occured
         for event in pygame.event.get():
             # print( event )
@@ -187,6 +236,9 @@ class SpaceInvader( SKG.Game ):
                 
                 if gamestate == IGP.GAME_STATES.GAME_OVER:
                     IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.INIT
+                
+                if gamestate == IGP.GAME_STATES.NEXTROUND:
+                    IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.MOVE2NEWROUND
             
             #The player wants to fire
             if event.type == pygame.KEYDOWN:

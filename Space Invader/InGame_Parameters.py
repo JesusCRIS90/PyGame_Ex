@@ -18,13 +18,14 @@ class GAME_STATES( IntEnum ):
     GAME_OVER       = 1
     INIT            = 2
     MOVE2RUNNING    = 3
-    MOVE2GAMEOVER   = 4
+    MOVE2NEWROUND   = 4
+    NEXTROUND       = 5
 
 """
     Dictionary with main parameters of game
 """
 GAME_PARAMETERS = {
-    "Round": 50,
+    "Round": 1,
     "Score": 0,
     "Lives": 5,
     "GameState": GAME_STATES.INIT

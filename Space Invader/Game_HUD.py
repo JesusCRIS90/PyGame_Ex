@@ -97,5 +97,4 @@ class GameHUD():
         self.final_score = self.font.render("Your Score: " + str( IGP.GAME_PARAMETERS["Score"] ), True, STF.WHITE)
         self.final_score_rect = self.final_score.get_rect()
         self.final_score_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 - (-0.25)*STF.FONT_SIZE )
-        pass
         
