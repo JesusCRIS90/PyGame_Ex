@@ -17,6 +17,8 @@ class GAME_STATES( IntEnum ):
     RUNNING         = 0
     GAME_OVER       = 1
     INIT            = 2
+    MOVE2RUNNING    = 3
+    MOVE2GAMEOVER   = 4
 
 """
     Dictionary with main parameters of game
