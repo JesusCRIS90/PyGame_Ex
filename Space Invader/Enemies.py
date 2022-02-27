@@ -24,7 +24,7 @@ class Alien(pygame.sprite.Sprite):
         self.starting_y = y
 
         self.direction = 1
-        self.velocity = 1
+        self.velocity = STF.ENEMIES_SPEED
         self.bullet_group = bullet_group
 
         self.shoot_sound = pygame.mixer.Sound("Assets/alien_fire.wav")
@@ -34,7 +34,7 @@ class Alien(pygame.sprite.Sprite):
         self.rect.x += self.direction*self.velocity
 
         #Randomly fire a bullet
-        if random.randint(0, 1000) > 999 and len(self.bullet_group) < 3:
+        if random.randint(0, 1000) > 999 and len(self.bullet_group) < STF.MAX_ENEMIES_BULLETS:
             self.shoot_sound.play()
             self.fire()
 
@@ -60,7 +60,7 @@ class AlienBullet(pygame.sprite.Sprite):
         self.rect.centerx = x
         self.rect.centery = y
 
-        self.velocity = 10
+        self.velocity = STF.ENEMIES_BULLET_SPEED
         bullet_group.add(self)
 
     def update(self):

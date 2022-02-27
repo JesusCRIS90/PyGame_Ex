@@ -8,6 +8,7 @@ In this files there are the blueprint classes for Player and Bullet Player
 
 import pygame
 import SettingFile as STF
+import InGame_Parameters as IGP
 
 class Player(pygame.sprite.Sprite):
     """A class to model a spaceship the user can controll"""
@@ -20,8 +21,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = STF.WINDOW_WIDTH//2
         self.rect.bottom = STF.WINDOW_HEIGHT
 
-        self.lives = 5
-        self.velocity = 8
+        self.lives = IGP.GAME_PARAMETERS["Lives"]
+        self.velocity = STF.PLAYER_SPEED
 
         self.bullet_group = bullet_group
 
@@ -61,7 +62,7 @@ class PlayerBullet(pygame.sprite.Sprite):
         self.rect.centerx = x
         self.rect.centery = y
 
-        self.velocity = 10
+        self.velocity = STF.PLAYER_BULLET_SPEED
         bullet_group.add(self)
 
     def update(self):

@@ -24,7 +24,7 @@ class GAME_STATES( IntEnum ):
     Dictionary with main parameters of game
 """
 GAME_PARAMETERS = {
-    "Round": 1,
+    "Round": 50,
     "Score": 0,
     "Lives": 5,
     "GameState": GAME_STATES.INIT

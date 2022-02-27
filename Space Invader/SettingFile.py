@@ -32,6 +32,9 @@ MAGENTA     = ( 255, 0, 255 )
 FONT_NAME = "Assets/Facon.ttf"
 FONT_SIZE = 64
 
-
 # Maximun Number of Player Bullet
-MAX_PLAYER_BULLETS = 2
+MAX_PLAYER_BULLETS = 2; MAX_ENEMIES_BULLETS = 3
+
+# Speed Enemies and Player
+ENEMIES_SPEED   = 5;  ENEMIES_BULLET_SPEED    = 10
+PLAYER_SPEED    = 5;  PLAYER_BULLET_SPEED     = 10

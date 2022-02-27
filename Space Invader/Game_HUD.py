@@ -36,7 +36,6 @@ class GameHUD():
         self.game_over_rect = self.game_over_text.get_rect()
         self.game_over_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 - 1*STF.FONT_SIZE )
 
-
        # Text for GameOver and Reset Screen
         self._updateScore_()
         self._updateLives_()
@@ -52,9 +51,12 @@ class GameHUD():
             
                 
     def draw_GameOver_Screen( self ):
+        self._updateFinalScore_()
         self.surface_display.blit( self.game_over_text, self.game_over_rect )
         self.surface_display.blit( self.continue_text, self.continue_rect )
-    
+        self.surface_display.blit( self.final_score, self.final_score_rect )
+
+
     def draw_Init_Screen( self ):
         self._updateRoundNumber_()
         self.surface_display.blit( self.game_title, self.game_title_rect )
@@ -90,4 +92,10 @@ class GameHUD():
         self.lives_text = self.font.render("Lives: " + str( IGP.GAME_PARAMETERS["Lives"] ), True, STF.WHITE)
         self.lives_rect = self.lives_text.get_rect()
         self.lives_rect.topright = (STF.WINDOW_WIDTH - 20, 10)
+    
+    def _updateFinalScore_( self ):
+        self.final_score = self.font.render("Your Score: " + str( IGP.GAME_PARAMETERS["Score"] ), True, STF.WHITE)
+        self.final_score_rect = self.final_score.get_rect()
+        self.final_score_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 - (-0.25)*STF.FONT_SIZE )
+        pass
         
