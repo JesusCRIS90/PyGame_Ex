@@ -27,6 +27,9 @@ YELLOW      = ( 255, 255, 0 )
 CYAN        = ( 0, 255, 255 )
 MAGENTA     = ( 255, 0, 255 )
 
+# Level File
+PATH_LEVEL_JSON = "Assets/levels/level_1.json"
+
 
 # Setting Font
 FONT_NAME = "Assets/Facon.ttf"

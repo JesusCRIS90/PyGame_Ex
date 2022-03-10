@@ -173,11 +173,11 @@ class ImageRegister():
     
     def _Load_Levels_Sprites_( self ):
         
-        # self.Sprite_Dictionary.update( { Levels_Sprites_Types.DIRT_PLATFORM: pygame.transform.scale(pygame.image.load("Asset/images/tiles/Tile (1).png"), (32,32)) } )
-        # self.Sprite_Dictionary.update( { Levels_Sprites_Types.LITTLE_CENTRAL_PLATFORM: pygame.transform.scale(pygame.image.load("Asset/images/tiles/Tile (4).png"), (32,32)) } )
-        # self.Sprite_Dictionary.update( { Levels_Sprites_Types.BIG_CENTRAL_PLATFORM: pygame.transform.scale(pygame.image.load("Asset/images/tiles/Tile (2).png"), (32,32)) } )
-        # self.Sprite_Dictionary.update( { Levels_Sprites_Types.LEFT_PLATFORM: pygame.transform.scale(pygame.image.load("Asset/images/tiles/Tile (3).png"), (32,32)) } )
-        # self.Sprite_Dictionary.update( { Levels_Sprites_Types.RIGTH_PLATFORM: pygame.transform.scale(pygame.image.load("Asset/images/tiles/Tile (5).png"), (32,32)) } )
+        self.Sprite_Dictionary.update( { Levels_Sprites_Types.DIRT_PLATFORM: pygame.transform.scale(pygame.image.load("Assets/images/tiles/Tile (1).png"), (32,32)) } )
+        self.Sprite_Dictionary.update( { Levels_Sprites_Types.LITTLE_CENTRAL_PLATFORM: pygame.transform.scale(pygame.image.load("Assets/images/tiles/Tile (4).png"), (32,32)) } )
+        self.Sprite_Dictionary.update( { Levels_Sprites_Types.BIG_CENTRAL_PLATFORM: pygame.transform.scale(pygame.image.load("Assets/images/tiles/Tile (2).png"), (32,32)) } )
+        self.Sprite_Dictionary.update( { Levels_Sprites_Types.LEFT_PLATFORM: pygame.transform.scale(pygame.image.load("Assets/images/tiles/Tile (3).png"), (32,32)) } )
+        self.Sprite_Dictionary.update( { Levels_Sprites_Types.RIGTH_PLATFORM: pygame.transform.scale(pygame.image.load("Assets/images/tiles/Tile (5).png"), (32,32)) } )
         self.Sprite_Dictionary.update( { Levels_Sprites_Types.BACKGROUND_IMAGE: pygame.transform.scale(pygame.image.load("Assets/images/background.png"), (STF.WINDOW_WIDTH, STF.WINDOW_HEIGHT) ) } )
         
         pass
