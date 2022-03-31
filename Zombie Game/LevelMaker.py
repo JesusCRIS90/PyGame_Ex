@@ -11,6 +11,9 @@ import pygame
 from pygame.sprite import Group
 
 import ImageRegister as IR
+import SettingFile as STF
+import InGame_Parameters as IGP
+from Player import Player
 
 class Tile(pygame.sprite.Sprite):
     """A class to represent a 32x32 pixel area in our display"""
@@ -45,6 +48,10 @@ class Tile(pygame.sprite.Sprite):
 
         #Create a mask for better player collisions
         # self.mask = pygame.mask.from_surface(self.image)
+    
+    def update( self ):
+        if IGP.GAME_PARAMETERS["DebugMode"] == True:
+            pygame.draw.rect( IGP.GAME_PARAMETERS["CanvasGame"], STF.BLUE, self.rect, 1)
 
 
 
@@ -66,7 +73,8 @@ class LevelMaker():
             return level["level"]
         except:
             return None
-        
+
+    
     def _Build_Map_( self, tile_map:list, all_tiles_group:Group, platforms_group:Group, imag_reg:IR.ImageRegister ):
         
         for y in range( len( tile_map ) ):
@@ -95,10 +103,12 @@ class LevelMaker():
                 #     Portal(j*32, i*32, "green", my_portal_group)
                 # elif tile_map[i][j] == 8:
                 #     Portal(j*32, i*32, "purple", my_portal_group)
-                # #Player
-                # elif tile_map[i][j] == 9:
-                #     my_player = Player(j*32 - 32, i*32 + 32, my_platform_group, my_portal_group, my_bullet_group)
-                #     my_player_group.add(my_player)
+                #Player
+                elif tile_map[ y ][ x ] == 9:
+                    player = Player(x*32 - 32, y*32 + 32, imag_reg, IGP.GAME_SPRITES_GROUPS["Platform_Group"], 
+                                                                    IGP.GAME_SPRITES_GROUPS["Portals_Group"],
+                                                                    IGP.GAME_SPRITES_GROUPS["PlayerBullet_Group"] )
+                    IGP.GAME_SPRITES_GROUPS["Player_Group"].add( player )
                 
         self.isMapBuilded = True
     

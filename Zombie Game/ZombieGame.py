@@ -10,7 +10,9 @@ import pygame
 import Game as SKG
 import SettingFile as STF
 import ImageRegister as IR
+import InGame_Parameters as IGP
 import LevelMaker
+from Player import Player
 # import json
 
 
@@ -23,6 +25,12 @@ class ZombieGame( SKG.Game ):
         # Calling the init method from Base Class
         super().__init__()
         
+        # Setting Canvas Display to Game Dictionary
+        IGP.GAME_PARAMETERS["CanvasGame"] = self.display_surface
+        
+        # Dictionary with Images
+        self.sprite_dictionary = IR.ImageRegister()
+        
         # Main Sprites groups for Game
         self.platforms_group    = pygame.sprite.Group()
         self.all_tiles_group    = pygame.sprite.Group()
@@ -32,14 +40,22 @@ class ZombieGame( SKG.Game ):
         self.rubi_groups        = pygame.sprite.Group()
         self.bullet_group       = pygame.sprite.Group()
         
-        # Dictionary with Images
-        self.sprite_dictionary = IR.ImageRegister()
+        # Assign these sprites to the GroupSprite Dictionary
+        IGP.GAME_SPRITES_GROUPS["Tiles_Group"]          = self.all_tiles_group
+        IGP.GAME_SPRITES_GROUPS["Platform_Group"]       = self.platforms_group 
+        IGP.GAME_SPRITES_GROUPS["Player_Group"]         = self.player_gruop
+        IGP.GAME_SPRITES_GROUPS["Enemies_Group"]        = self.enemies_group
+        IGP.GAME_SPRITES_GROUPS["Portals_Group"]        = self.portals_group
+        IGP.GAME_SPRITES_GROUPS["Rubies_Group"]         = self.rubi_groups
+        IGP.GAME_SPRITES_GROUPS["PlayerBullet_Group"]   = self.bullet_group
+        
         
         self.background_rect = self.sprite_dictionary.GetSprite( IR.Levels_Sprites_Types.BACKGROUND_IMAGE ).get_rect()
         self.background_rect.topleft = ( 0, 0 )
         
         level_builder = LevelMaker.LevelMaker(STF.PATH_LEVEL_JSON, self.all_tiles_group, self.platforms_group, self.sprite_dictionary )
         self.isMapBult = level_builder.IsMapBuilded()
+        
         
     def __UpdateGameState__( self ):
         """
@@ -50,18 +66,34 @@ class ZombieGame( SKG.Game ):
         # Fill the display surface to cover old images
         self.display_surface.blit( self.sprite_dictionary.GetSprite( IR.Levels_Sprites_Types.BACKGROUND_IMAGE ), self.background_rect )   
 
-        #Draw tiles and update ruby maker
-        self.all_tiles_group.update()
+        #Draw tiles
         self.all_tiles_group.draw( self.display_surface )
+        self.all_tiles_group.update()
+
+        # Draw and Update Player
+        self.player_gruop.update()
+        self.player_gruop.draw( self.display_surface )
 
         # Update Clock Game
         pygame.display.update()
         self.clockGame.tick( STF.FPS )
     
     
-my_game = ZombieGame(); my_game.RunGame()
+my_game = ZombieGame() 
+my_game.RunGame()
 
-# f = open( STF.PATH_LEVEL_JSON )
-# level = json.load( f )
-# level = level["level"]
-# f.close()
+# imag_reg = IR.ImageRegister()
+
+
+# temp_sprite_list1 = imag_reg.GetSprite( IR.Player_Sprites_Types.IDLE_LEFT )
+# temp_sprite_list2 = imag_reg.GetSprite( IR.Player_Sprites_Types.IDLE_RIGTH )
+
+# temp_sprite_list3 = imag_reg.GetSprite( IR.Player_Sprites_Types.ATTACK_LEFT )
+# temp_sprite_list4 = imag_reg.GetSprite( IR.Player_Sprites_Types.ATTACK_RIGTH )
+
+# temp_sprite_list5 = imag_reg.GetSprite( IR.Player_Sprites_Types.JUMP_LEFT )
+# temp_sprite_list6 = imag_reg.GetSprite( IR.Player_Sprites_Types.JUMP_RIGHT )
+
+# temp_sprite_list7 = imag_reg.GetSprite( IR.Player_Sprites_Types.RUN_LEFT )
+# temp_sprite_list8 = imag_reg.GetSprite( IR.Player_Sprites_Types.RUN_RIGTH )
+
