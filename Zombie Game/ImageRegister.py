@@ -16,6 +16,19 @@ import copy
 """"
     Be careful!!!. IntEnum's must not be repit because the dictionary's keys must be uniques
 """
+
+@unique
+class Levels_Sprites_Types( IntEnum ):
+    DIRT_PLATFORM               = 0
+    LITTLE_CENTRAL_PLATFORM     = 1
+    BIG_CENTRAL_PLATFORM        = 2
+    LEFT_PLATFORM               = 3
+    RIGTH_PLATFORM              = 4
+    GREEN_PORTAL                = 5
+    BLUE_PORTAL                 = 6
+    RUBY                        = 7
+    BACKGROUND_IMAGE            = 8
+
 @unique
 class Player_Sprites_Types( IntEnum ):
     IDLE_LEFT     = 9
@@ -29,25 +42,19 @@ class Player_Sprites_Types( IntEnum ):
     SLASH_LEFT    = 17
     SLASH_RIGTH   = 18
 
+
 @unique
-class Levels_Sprites_Types( IntEnum ):
-    DIRT_PLATFORM               = 0
-    LITTLE_CENTRAL_PLATFORM     = 1
-    BIG_CENTRAL_PLATFORM        = 2
-    LEFT_PLATFORM               = 3
-    RIGTH_PLATFORM              = 4
-    GREEN_PORTAL                = 5
-    BLUE_PORTAL                 = 6
-    RUBY                        = 7
-    BACKGROUND_IMAGE            = 8
-    
+class Bullet_Player_Sprites_Types( IntEnum ):
+    BULLET_LEFT     = 19
+    BULLET_RIGTH    = 20
+
     
     
 class ImageRegister():
     
     def __init__( self ):
 
-        # Sprites list for Player
+        # Sprites list for Player --> No son Necesarios
         self.player_move_right_sprites      = []
         self.player_move_left_sprites       = []
         self.player_idle_right_sprites      = []
@@ -81,6 +88,7 @@ class ImageRegister():
 
 
         self._Load_Player_Sprites_()
+        self._Load_Bullet_Sprites_()
         # self._Load_Enemy_Sprites_()
         self._Load_Levels_Sprites_()
                 
@@ -91,19 +99,19 @@ class ImageRegister():
         """ Adding Runing Sprites to Registers """
         temp_left_sprite = []; temp_rigth_sprite = []         
 
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run1.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run2.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run3.png"), (64,64) ) )    
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run4.png"), (64,64) ) )        
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run5.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run6.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run7.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run8.png"), (64,64) ) ) 
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run9.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run10.png"), (64,64) ) ) 
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run1.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run2.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run3.png"), (64,64) ) )    
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run4.png"), (64,64) ) )        
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run5.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run6.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run7.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run8.png"), (64,64) ) ) 
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run9.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/run/Run10.png"), (64,64) ) ) 
         
-        for sprite in temp_left_sprite:
-            temp_rigth_sprite.append(pygame.transform.flip(sprite, True, False))
+        for sprite in temp_rigth_sprite:
+            temp_left_sprite.append(pygame.transform.flip(sprite, True, False))
         
         self.Sprite_Dictionary[ Player_Sprites_Types.RUN_RIGTH ] = temp_rigth_sprite
         self.Sprite_Dictionary[ Player_Sprites_Types.RUN_LEFT ]  = temp_left_sprite
@@ -176,7 +184,10 @@ class ImageRegister():
         self.Sprite_Dictionary[ Player_Sprites_Types.ATTACK_RIGTH ] = temp_rigth_sprite
         self.Sprite_Dictionary[ Player_Sprites_Types.ATTACK_LEFT ]  = temp_left_sprite
 
-    
+    def _Load_Bullet_Sprites_( self ):
+        self.Sprite_Dictionary.update( { Bullet_Player_Sprites_Types.BULLET_LEFT: pygame.transform.scale(pygame.image.load("Assets/images/player/slash.png"), (32,32)) } )
+        self.Sprite_Dictionary.update( { Bullet_Player_Sprites_Types.BULLET_RIGTH: pygame.transform.scale(pygame.transform.flip(pygame.image.load("Assets/images/player/slash.png"), True, False), (32,32)) } )
+
     def _Load_Enemy_Sprites_( self ):
         pass
     
@@ -189,8 +200,7 @@ class ImageRegister():
         self.Sprite_Dictionary.update( { Levels_Sprites_Types.RIGTH_PLATFORM: pygame.transform.scale(pygame.image.load("Assets/images/tiles/Tile (5).png"), (32,32)) } )
         self.Sprite_Dictionary.update( { Levels_Sprites_Types.BACKGROUND_IMAGE: pygame.transform.scale(pygame.image.load("Assets/images/background.png"), (STF.WINDOW_WIDTH, STF.WINDOW_HEIGHT) ) } )
         
-        pass
-    
+        
     def add2Register( self ):
         pass
     
@@ -203,6 +213,11 @@ class ImageRegister():
     def GetSprite( self, enum_sprite:Player_Sprites_Types ):
         return self.Sprite_Dictionary[ enum_sprite ]
         # pass
+    
+    @overload
+    def GetSprite( self, enum_sprite:Bullet_Player_Sprites_Types ):
+        return self.Sprite_Dictionary[ enum_sprite ]
+    
     
     def GetSprite( self, enum_sprite ):
         return self.Sprite_Dictionary[ enum_sprite ]

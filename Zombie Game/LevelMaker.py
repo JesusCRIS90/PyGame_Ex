@@ -21,7 +21,8 @@ class Tile(pygame.sprite.Sprite):
     def __init__(self, x, y, image_number, imag_reg:IR.ImageRegister ,all_tiles_group:Group, platform_group = None ):
         """Initialize the tile"""
         super().__init__()
-        #Load in the correct image and add it to the correct sub group
+        
+        """Load in the correct image and add it to the correct sub group"""
         #Dirt tiles
         if image_number == 1:
             self.image = pygame.transform.scale( imag_reg.GetSprite( IR.Levels_Sprites_Types.DIRT_PLATFORM ) , (32,32) )
@@ -73,6 +74,10 @@ class LevelMaker():
             return level["level"]
         except:
             return None
+    
+    def GetPlayerPosition( self ):
+        return self.player_position
+        # pass
 
     
     def _Build_Map_( self, tile_map:list, all_tiles_group:Group, platforms_group:Group, imag_reg:IR.ImageRegister ):
@@ -103,12 +108,14 @@ class LevelMaker():
                 #     Portal(j*32, i*32, "green", my_portal_group)
                 # elif tile_map[i][j] == 8:
                 #     Portal(j*32, i*32, "purple", my_portal_group)
+                
                 #Player
                 elif tile_map[ y ][ x ] == 9:
-                    player = Player(x*32 - 32, y*32 + 32, imag_reg, IGP.GAME_SPRITES_GROUPS["Platform_Group"], 
-                                                                    IGP.GAME_SPRITES_GROUPS["Portals_Group"],
-                                                                    IGP.GAME_SPRITES_GROUPS["PlayerBullet_Group"] )
-                    IGP.GAME_SPRITES_GROUPS["Player_Group"].add( player )
+                    self.player_position = [ x, y ]
+                    # player = Player(x*32 - 32, y*32 + 32, imag_reg, IGP.GAME_SPRITES_GROUPS["Platform_Group"], 
+                    #                                                 IGP.GAME_SPRITES_GROUPS["Portals_Group"],
+                    #                                                 IGP.GAME_SPRITES_GROUPS["PlayerBullet_Group"] )
+                    # IGP.GAME_SPRITES_GROUPS["Player_Group"].add( player )
                 
         self.isMapBuilded = True
     

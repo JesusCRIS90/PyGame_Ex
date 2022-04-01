@@ -57,6 +57,19 @@ class ZombieGame( SKG.Game ):
         self.isMapBult = level_builder.IsMapBuilded()
         
         
+        # Create Player
+        player_pos = level_builder.GetPlayerPosition()
+        player = Player( player_pos[ 0 ]*32 - 32, 
+                         player_pos[ 1 ]*32 + 32, 
+                         self.sprite_dictionary, 
+                         IGP.GAME_SPRITES_GROUPS["Platform_Group"], 
+                         IGP.GAME_SPRITES_GROUPS["Portals_Group"],
+                         IGP.GAME_SPRITES_GROUPS["PlayerBullet_Group"] )
+        self.player = player       
+        IGP.GAME_SPRITES_GROUPS["Player_Group"].add( player )
+
+        
+        
     def __UpdateGameState__( self ):
         """
             Update Logic Game each Frame Game. This is the function that the base clase
@@ -77,10 +90,33 @@ class ZombieGame( SKG.Game ):
         # Update Clock Game
         pygame.display.update()
         self.clockGame.tick( STF.FPS )
+        
+        
+    def _CheckingEvents_( self ):
+        """Checking Player Events"""
+        # Loop through a list of Event Objects that have occured
+        for event in pygame.event.get():
+            # print( event )
+            if event.type == pygame.QUIT:
+                self.running = False
+            
+            if event.type == pygame.KEYDOWN:
+                #Player wants to jump
+                if event.key == pygame.K_SPACE:
+                    self.player.jump()
+                #Player wants to fire
+                if event.key == pygame.K_UP:
+                    self.player.fire()
+                        
+                        
+
     
     
 my_game = ZombieGame() 
 my_game.RunGame()
+
+
+
 
 # imag_reg = IR.ImageRegister()
 
