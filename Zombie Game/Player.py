@@ -10,6 +10,7 @@ import pygame
 import SettingFile as STF
 import InGame_Parameters as IGP
 import ImageRegister as IR
+from ScenaryObjects import Portal
 from ImageRegister import Player_Sprites_Types as PlayerSprite
 from ImageRegister import Bullet_Player_Sprites_Types as BulletSprite
 
@@ -60,6 +61,7 @@ class Player(pygame.sprite.Sprite):
         self.position = vector(x, y)
         self.velocity = vector(0, 0)
         self.acceleration = vector(0, self.VERTICAL_ACCELERATION)
+        self.direction = ""
 
         #Set intial player values
         self.health         = self.STARTING_HEALTH
@@ -90,10 +92,12 @@ class Player(pygame.sprite.Sprite):
         if keys[ pygame.K_LEFT ]:
             self.acceleration.x = -1*self.HORIZONTAL_ACCELERATION
             self.animate( self.imageRegister.GetSprite( PlayerSprite.RUN_LEFT ), .5)
+            self.direction = "left"
         
         elif keys[ pygame.K_RIGHT ]:
             self.acceleration.x = self.HORIZONTAL_ACCELERATION
             self.animate( self.imageRegister.GetSprite( PlayerSprite.RUN_RIGTH ), .5)
+            self.direction = "rigth"
         
         else:
             if self.velocity.x > 0:
@@ -116,6 +120,13 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottomleft = self.position
 
 
+    def _teleport2position_( self, pos, offset ):
+        # print( [ pos, offset ] )
+        self.position.x = pos[ 0 ] + offset[ 0 ]
+        self.position.y = pos[ 1 ] + offset[ 1 ]
+        self.rect.bottomleft = self.position
+        pass
+
     def check_collisions(self):
         """Check for collisions with platforms and portals"""
         #Collision check between player and platforms when falling  ; y > 0 --> Falling
@@ -135,20 +146,30 @@ class Player(pygame.sprite.Sprite):
                     self.position.y += 1
                     self.rect.bottomleft = self.position
 
-        # #Collision check for portals
-        # if pygame.sprite.spritecollide(self, self.portal_group, False):ss
+        #Collision check for portals
+        collision_portal = pygame.sprite.spritecollide(self, self.portal_group, False)
         #     self.portal_sound.play()
-        #     #Determine which portal you are moving to
-        #     #Left and right
-        #     if self.position.x > WINDOW_WIDTH//2:
-        #         self.position.x = 86
-        #     else:
-        #         self.position.x = WINDOW_WIDTH - 150
-        #     #Top and bottom
-        #     if self.position.y > WINDOW_HEIGHT//2:
-        #         self.position.y = 64
-        #     else:
-        #         self.position.y = WINDOW_HEIGHT - 132
+            # Determine which portal you are moving to
+        if collision_portal:
+            for portal in collision_portal:
+                pos2move_player = Portal.GetPortal2Teletransport(portal.getUniqueID(), portal.getType() )
+                if pos2move_player != None:
+                    if self.direction == "left":
+                        offset = ( -100, 0 )
+                    else:
+                        offset = ( 100, 0 )
+                    self._teleport2position_( pos2move_player, offset )
+                pass
+            # # Left and right
+            # if self.position.x > WINDOW_WIDTH//2:
+            #     self.position.x = 86
+            # else:
+            #     self.position.x = WINDOW_WIDTH - 150
+            # #Top and bottom
+            # if self.position.y > WINDOW_HEIGHT//2:
+            #     self.position.y = 64
+            # else:
+            #     self.position.y = WINDOW_HEIGHT - 132
 
         #     self.rect.bottomleft = self.position
 
@@ -158,16 +179,16 @@ class Player(pygame.sprite.Sprite):
         #Animate the player jump
         if self.animate_jump:
             if self.velocity.x > 0:
-                self.animate( self.imageRegister.GetSprite( PlayerSprite.JUMP_RIGHT ), .1)
+                self.animate( self.imageRegister.GetSprite( PlayerSprite.JUMP_RIGHT ), .25)
             else:
-                self.animate( self.imageRegister.GetSprite( PlayerSprite.JUMP_LEFT  ), .1)
+                self.animate( self.imageRegister.GetSprite( PlayerSprite.JUMP_LEFT  ), .25)
 
         #Animate the player attack
         if self.animate_fire:
             if self.velocity.x > 0:
-                self.animate( self.imageRegister.GetSprite( PlayerSprite.ATTACK_RIGTH ), .25)
+                self.animate( self.imageRegister.GetSprite( PlayerSprite.ATTACK_RIGTH ), .20)
             else:
-                self.animate( self.imageRegister.GetSprite( PlayerSprite.ATTACK_LEFT  ), .25)
+                self.animate( self.imageRegister.GetSprite( PlayerSprite.ATTACK_LEFT  ), .20)
 
 
     def jump(self):

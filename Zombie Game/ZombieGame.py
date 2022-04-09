@@ -53,7 +53,7 @@ class ZombieGame( SKG.Game ):
         self.background_rect = self.sprite_dictionary.GetSprite( IR.Levels_Sprites_Types.BACKGROUND_IMAGE ).get_rect()
         self.background_rect.topleft = ( 0, 0 )
         
-        level_builder = LevelMaker.LevelMaker(STF.PATH_LEVEL_JSON, self.all_tiles_group, self.platforms_group, self.sprite_dictionary )
+        level_builder = LevelMaker.LevelMaker(STF.PATH_LEVEL_JSON, self.all_tiles_group, self.platforms_group, self.portals_group, self.sprite_dictionary )
         self.isMapBult = level_builder.IsMapBuilded()
         
         
@@ -86,6 +86,14 @@ class ZombieGame( SKG.Game ):
         # Draw and Update Player
         self.player_gruop.update()
         self.player_gruop.draw( self.display_surface )
+        
+        # Draw and Update Bullet Player
+        self.bullet_group.update()
+        self.bullet_group.draw( self.display_surface )
+        
+        # Draw and Update Portals
+        self.portals_group.update()
+        self.portals_group.draw( self.display_surface )
 
         # Update Clock Game
         pygame.display.update()
@@ -116,20 +124,4 @@ my_game = ZombieGame()
 my_game.RunGame()
 
 
-
-
-# imag_reg = IR.ImageRegister()
-
-
-# temp_sprite_list1 = imag_reg.GetSprite( IR.Player_Sprites_Types.IDLE_LEFT )
-# temp_sprite_list2 = imag_reg.GetSprite( IR.Player_Sprites_Types.IDLE_RIGTH )
-
-# temp_sprite_list3 = imag_reg.GetSprite( IR.Player_Sprites_Types.ATTACK_LEFT )
-# temp_sprite_list4 = imag_reg.GetSprite( IR.Player_Sprites_Types.ATTACK_RIGTH )
-
-# temp_sprite_list5 = imag_reg.GetSprite( IR.Player_Sprites_Types.JUMP_LEFT )
-# temp_sprite_list6 = imag_reg.GetSprite( IR.Player_Sprites_Types.JUMP_RIGHT )
-
-# temp_sprite_list7 = imag_reg.GetSprite( IR.Player_Sprites_Types.RUN_LEFT )
-# temp_sprite_list8 = imag_reg.GetSprite( IR.Player_Sprites_Types.RUN_RIGTH )
 

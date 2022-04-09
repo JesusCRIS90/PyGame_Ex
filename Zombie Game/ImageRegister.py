@@ -25,7 +25,7 @@ class Levels_Sprites_Types( IntEnum ):
     LEFT_PLATFORM               = 3
     RIGTH_PLATFORM              = 4
     GREEN_PORTAL                = 5
-    BLUE_PORTAL                 = 6
+    PURPLE_PORTAL               = 6
     RUBY                        = 7
     BACKGROUND_IMAGE            = 8
 
@@ -91,6 +91,7 @@ class ImageRegister():
         self._Load_Bullet_Sprites_()
         # self._Load_Enemy_Sprites_()
         self._Load_Levels_Sprites_()
+        self._Load_Portals_Sprites_()
                 
     
     def _Load_Player_Sprites_( self ):
@@ -144,19 +145,19 @@ class ImageRegister():
         """ Adding Jumping Sprites to Registers """        
         temp_left_sprite = []; temp_rigth_sprite = []
  
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump1.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump2.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump3.png"), (64,64) ) )    
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump4.png"), (64,64) ) )        
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump5.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump6.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump7.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump8.png"), (64,64) ) ) 
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump9.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump10.png"), (64,64) ) ) 
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump1.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump2.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump3.png"), (64,64) ) )    
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump4.png"), (64,64) ) )        
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump5.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump6.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump7.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump8.png"), (64,64) ) ) 
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump9.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/jump/Jump10.png"), (64,64) ) ) 
         
-        for sprite in temp_left_sprite:
-            temp_rigth_sprite.append(pygame.transform.flip(sprite, True, False))
+        for sprite in temp_rigth_sprite:
+            temp_left_sprite.append(pygame.transform.flip(sprite, True, False))
 
 
         self.Sprite_Dictionary[ Player_Sprites_Types.JUMP_RIGHT ] = temp_rigth_sprite
@@ -166,19 +167,19 @@ class ImageRegister():
         """ Adding Attacking Sprites to Registers """
         temp_left_sprite = []; temp_rigth_sprite = []
  
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack1.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack2.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack3.png"), (64,64) ) )    
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack4.png"), (64,64) ) )        
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack5.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack6.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack7.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack8.png"), (64,64) ) ) 
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack9.png"), (64,64) ) )
-        temp_left_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack10.png"), (64,64) ) ) 
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack1.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack2.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack3.png"), (64,64) ) )    
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack4.png"), (64,64) ) )        
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack5.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack6.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack7.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack8.png"), (64,64) ) ) 
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack9.png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/player/attack/Attack10.png"), (64,64) ) ) 
         
-        for sprite in temp_left_sprite:
-            temp_rigth_sprite.append(pygame.transform.flip(sprite, True, False))
+        for sprite in temp_rigth_sprite:
+            temp_left_sprite.append(pygame.transform.flip(sprite, True, False))
 
 
         self.Sprite_Dictionary[ Player_Sprites_Types.ATTACK_RIGTH ] = temp_rigth_sprite
@@ -190,6 +191,64 @@ class ImageRegister():
 
     def _Load_Enemy_Sprites_( self ):
         pass
+    
+    def _Load_Portals_Sprites_( self ):
+        """ Adding Purple Portals to Registers """
+        temp_list = []
+        
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile000.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile001.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile002.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile003.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile004.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile005.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile006.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile007.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile008.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile009.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile010.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile011.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile012.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile013.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile014.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile015.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile016.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile017.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile018.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile019.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile020.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/purple/tile021.png"), (80,80) ) )
+        
+        self.Sprite_Dictionary.update( { Levels_Sprites_Types.PURPLE_PORTAL: temp_list } )
+        
+        """ Adding Green Portals to Registers """
+        temp_list = []
+
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile000.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile001.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile002.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile003.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile004.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile005.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile006.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile007.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile008.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile009.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile010.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile011.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile012.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile013.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile014.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile015.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile016.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile017.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile018.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile019.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile020.png"), (80,80) ) )
+        temp_list.append( pygame.transform.scale( pygame.image.load("Assets/images/portals/green/tile021.png"), (80,80) ) )
+
+        self.Sprite_Dictionary.update( { Levels_Sprites_Types.GREEN_PORTAL: temp_list } )
+
     
     def _Load_Levels_Sprites_( self ):
         

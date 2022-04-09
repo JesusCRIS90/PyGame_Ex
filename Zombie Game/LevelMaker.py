@@ -11,9 +11,11 @@ import pygame
 from pygame.sprite import Group
 
 import ImageRegister as IR
+from ImageRegister import Levels_Sprites_Types as LST
 import SettingFile as STF
 import InGame_Parameters as IGP
 from Player import Player
+from ScenaryObjects import Portal
 
 class Tile(pygame.sprite.Sprite):
     """A class to represent a 32x32 pixel area in our display"""
@@ -59,11 +61,11 @@ class Tile(pygame.sprite.Sprite):
 class LevelMaker():
     """A class to build a level from a json file"""
     
-    def __init__( self, path_lvl:str, all_tiles_group:Group, platforms_group:Group, imag_reg:IR.ImageRegister ):
+    def __init__( self, path_lvl:str, all_tiles_group:Group, platforms_group:Group, portals_groups:Group, imag_reg:IR.ImageRegister ):
         self.level_map = self._load_level_map_( path_lvl )
         self.isMapBuilded = False
         if self.level_map != None:
-            self._Build_Map_(self.level_map, all_tiles_group, platforms_group, imag_reg)
+            self._Build_Map_(self.level_map, all_tiles_group, platforms_group, portals_groups, imag_reg)
 
     
     def _load_level_map_( self, path_lvl:str ):
@@ -80,7 +82,7 @@ class LevelMaker():
         # pass
 
     
-    def _Build_Map_( self, tile_map:list, all_tiles_group:Group, platforms_group:Group, imag_reg:IR.ImageRegister ):
+    def _Build_Map_( self, tile_map:list, all_tiles_group:Group, platforms_group:Group, portals_groups:Group, imag_reg:IR.ImageRegister ):
         
         for y in range( len( tile_map ) ):
         #Loop through the 40 elements in a given list (cols) (j moves us across the map)
@@ -103,19 +105,17 @@ class LevelMaker():
                 # #Ruby Maker
                 # elif tile_map[i][j] == 6:
                 #     RubyMaker(j*32, i*32, my_main_tile_group)
-                # #Portals
-                # elif tile_map[i][j] == 7:
-                #     Portal(j*32, i*32, "green", my_portal_group)
-                # elif tile_map[i][j] == 8:
-                #     Portal(j*32, i*32, "purple", my_portal_group)
+                #Portals
+                elif tile_map[ y ][ x ] == 7:
+                    Portal(x*32, y*32, imag_reg, LST.GREEN_PORTAL, portals_groups)
+                
+                elif tile_map[ y ][ x ] == 8:
+                    Portal(x*32, y*32, imag_reg, LST.PURPLE_PORTAL, portals_groups)
                 
                 #Player
                 elif tile_map[ y ][ x ] == 9:
                     self.player_position = [ x, y ]
-                    # player = Player(x*32 - 32, y*32 + 32, imag_reg, IGP.GAME_SPRITES_GROUPS["Platform_Group"], 
-                    #                                                 IGP.GAME_SPRITES_GROUPS["Portals_Group"],
-                    #                                                 IGP.GAME_SPRITES_GROUPS["PlayerBullet_Group"] )
-                    # IGP.GAME_SPRITES_GROUPS["Player_Group"].add( player )
+
                 
         self.isMapBuilded = True
     
