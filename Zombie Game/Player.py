@@ -149,7 +149,8 @@ class Player(pygame.sprite.Sprite):
         #Collision check for portals
         collision_portal = pygame.sprite.spritecollide(self, self.portal_group, False)
         #     self.portal_sound.play()
-            # Determine which portal you are moving to
+        
+        # Determine which portal you are moving to
         if collision_portal:
             for portal in collision_portal:
                 pos2move_player = Portal.GetPortal2Teletransport(portal.getUniqueID(), portal.getType() )
@@ -159,19 +160,7 @@ class Player(pygame.sprite.Sprite):
                     else:
                         offset = ( 100, 0 )
                     self._teleport2position_( pos2move_player, offset )
-                pass
-            # # Left and right
-            # if self.position.x > WINDOW_WIDTH//2:
-            #     self.position.x = 86
-            # else:
-            #     self.position.x = WINDOW_WIDTH - 150
-            # #Top and bottom
-            # if self.position.y > WINDOW_HEIGHT//2:
-            #     self.position.y = 64
-            # else:
-            #     self.position.y = WINDOW_HEIGHT - 132
-
-        #     self.rect.bottomleft = self.position
+        
 
 
     def check_animations(self):

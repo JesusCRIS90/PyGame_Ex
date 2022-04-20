@@ -47,51 +47,54 @@ class Player_Sprites_Types( IntEnum ):
 class Bullet_Player_Sprites_Types( IntEnum ):
     BULLET_LEFT     = 19
     BULLET_RIGTH    = 20
-
+    
+@unique
+class Enemy_Sprites_Types( IntEnum ):
+    FEMALE_ZOMBIE_WALK_RIGTH        = 21
+    FEMALE_ZOMBIE_WALK_LEFT         = 22
+    FEMALE_ZOMBIE_DIE_RIGTH         = 23
+    FEMALE_ZOMBIE_DIE_LEFT          = 24
+    MALE_ZOMBIE_WALK_RIGTH          = 25
+    MALE_ZOMBIE_WALK_LEFT           = 26
+    MALE_ZOMBIE_DIE_RIGTH           = 27
+    MALE_ZOMBIE_DIE_LEFT            = 28
     
     
 class ImageRegister():
     
     def __init__( self ):
 
-        # Sprites list for Player --> No son Necesarios
-        self.player_move_right_sprites      = []
-        self.player_move_left_sprites       = []
-        self.player_idle_right_sprites      = []
-        self.player_idle_left_sprites       = []
-        self.player_jump_right_sprites      = []
-        self.player_jump_left_sprites       = []
-        self.player_attack_right_sprites    = []
-        self.player_attack_left_sprites     = []
+        # # Sprites list for Player --> No son Necesarios
+        # self.player_move_right_sprites      = []
+        # self.player_move_left_sprites       = []
+        # self.player_idle_right_sprites      = []
+        # self.player_idle_left_sprites       = []
+        # self.player_jump_right_sprites      = []
+        # self.player_jump_left_sprites       = []
+        # self.player_attack_right_sprites    = []
+        # self.player_attack_left_sprites     = []
         
-        # # Sprites list for Enemy
-        # self.enemy_move_right_sprites      = None
-        # self.enemy_move_left_sprites       = None
-        # self.enemy_idle_right_sprites      = None
-        # self.enemy_idle_left_sprites       = None
-        # self.enemy_jump_right_sprites      = None
-        # self.enemy_jump_left_sprites       = None
-        # self.enemy_attack_right_sprites    = None
-        # self.enemy_attack_left_sprites     = None
 
-        # Sprites to Build Level Scenarie
-        self.dirt_platform_sprites              = None
-        self.little_central_platform_sprites    = None
-        self.big_central_platform_sprites       = None
-        self.left_platform_sprites              = None
-        self.rigth_platform_sprites             = None
-        self.background_image                   = None
+        # # Sprites to Build Level Scenarie
+        # self.dirt_platform_sprites              = None
+        # self.little_central_platform_sprites    = None
+        # self.big_central_platform_sprites       = None
+        # self.left_platform_sprites              = None
+        # self.rigth_platform_sprites             = None
+        # self.background_image                   = None
         
         
         # Sprite Dictionary
         self.Sprite_Dictionary = {}
 
 
-        self._Load_Player_Sprites_()
-        self._Load_Bullet_Sprites_()
-        # self._Load_Enemy_Sprites_()
         self._Load_Levels_Sprites_()
         self._Load_Portals_Sprites_()
+        self._Load_Player_Sprites_()
+        self._Load_Bullet_Sprites_()
+        self._Load_Enemy_Sprites_()
+        self._Load_Rubies_Sprites()
+
                 
     
     def _Load_Player_Sprites_( self ):
@@ -190,6 +193,91 @@ class ImageRegister():
         self.Sprite_Dictionary.update( { Bullet_Player_Sprites_Types.BULLET_RIGTH: pygame.transform.scale(pygame.transform.flip(pygame.image.load("Assets/images/player/slash.png"), True, False), (32,32)) } )
 
     def _Load_Enemy_Sprites_( self ):
+        
+        """ Adding boy Walking Sprites to Registers """
+        temp_left_sprite = []; temp_rigth_sprite = []         
+
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (1).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (2).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (3).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (4).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (5).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (6).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (7).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (8).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (9).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/walk/Walk (10).png"), (64,64) ) )
+
+        for sprite in temp_rigth_sprite:
+            temp_left_sprite.append(pygame.transform.flip(sprite, True, False))
+      
+        self.Sprite_Dictionary[ Enemy_Sprites_Types.MALE_ZOMBIE_WALK_RIGTH ] = temp_rigth_sprite
+        self.Sprite_Dictionary[ Enemy_Sprites_Types.MALE_ZOMBIE_WALK_LEFT ]  = temp_left_sprite
+
+
+        """ Adding boy Diying Sprites to Registers """
+        temp_left_sprite = []; temp_rigth_sprite = []         
+
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (1).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (2).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (3).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (4).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (5).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (6).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (7).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (8).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (9).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/boy/dead/Dead (10).png"), (64,64) ) )
+
+        for sprite in temp_rigth_sprite:
+            temp_left_sprite.append(pygame.transform.flip(sprite, True, False))
+      
+        self.Sprite_Dictionary[ Enemy_Sprites_Types.MALE_ZOMBIE_DIE_RIGTH ] = temp_rigth_sprite
+        self.Sprite_Dictionary[ Enemy_Sprites_Types.MALE_ZOMBIE_DIE_LEFT ]  = temp_left_sprite
+        
+        
+        """ Adding girl Walking Sprites to Registers """
+        temp_left_sprite = []; temp_rigth_sprite = []         
+
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (1).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (2).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (3).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (4).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (5).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (6).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (7).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (8).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (9).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/walk/Walk (10).png"), (64,64) ) )
+
+        for sprite in temp_rigth_sprite:
+            temp_left_sprite.append(pygame.transform.flip(sprite, True, False))
+      
+        self.Sprite_Dictionary[ Enemy_Sprites_Types.FEMALE_ZOMBIE_WALK_RIGTH ] = temp_rigth_sprite
+        self.Sprite_Dictionary[ Enemy_Sprites_Types.FEMALE_ZOMBIE_WALK_LEFT ]  = temp_left_sprite
+
+
+        """ Adding girl Diying Sprites to Registers """
+        temp_left_sprite = []; temp_rigth_sprite = []         
+
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (1).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (2).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (3).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (4).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (5).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (6).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (7).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (8).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (9).png"), (64,64) ) )
+        temp_rigth_sprite.append( pygame.transform.scale( pygame.image.load("Assets/images/zombie/girl/dead/Dead (10).png"), (64,64) ) )
+
+        for sprite in temp_rigth_sprite:
+            temp_left_sprite.append(pygame.transform.flip(sprite, True, False))
+      
+        self.Sprite_Dictionary[ Enemy_Sprites_Types.FEMALE_ZOMBIE_DIE_RIGTH ] = temp_rigth_sprite
+        self.Sprite_Dictionary[ Enemy_Sprites_Types.FEMALE_ZOMBIE_DIE_LEFT ]  = temp_left_sprite
+
+
         pass
     
     def _Load_Portals_Sprites_( self ):
@@ -260,8 +348,22 @@ class ImageRegister():
         self.Sprite_Dictionary.update( { Levels_Sprites_Types.BACKGROUND_IMAGE: pygame.transform.scale(pygame.image.load("Assets/images/background.png"), (STF.WINDOW_WIDTH, STF.WINDOW_HEIGHT) ) } )
         
         
-    def add2Register( self ):
-        pass
+    def _Load_Rubies_Sprites( self ):
+
+        """"  Load the Rubies Sprites """
+        temp_list = []
+        
+        temp_list.append(pygame.transform.scale(pygame.image.load("Assets/images/ruby/tile000.png"), (40,40)))
+        temp_list.append(pygame.transform.scale(pygame.image.load("Assets/images/ruby/tile001.png"), (40,40)))
+        temp_list.append(pygame.transform.scale(pygame.image.load("Assets/images/ruby/tile002.png"), (40,40)))
+        temp_list.append(pygame.transform.scale(pygame.image.load("Assets/images/ruby/tile003.png"), (40,40)))
+        temp_list.append(pygame.transform.scale(pygame.image.load("Assets/images/ruby/tile004.png"), (40,40)))
+        temp_list.append(pygame.transform.scale(pygame.image.load("Assets/images/ruby/tile005.png"), (40,40)))
+        temp_list.append(pygame.transform.scale(pygame.image.load("Assets/images/ruby/tile006.png"), (40,40)))
+
+        self.Sprite_Dictionary.update( { Levels_Sprites_Types.RUBY: temp_list } )
+
+        
     
     @overload
     def GetSprite( self, enum_sprite:Levels_Sprites_Types ):
@@ -275,6 +377,10 @@ class ImageRegister():
     
     @overload
     def GetSprite( self, enum_sprite:Bullet_Player_Sprites_Types ):
+        return self.Sprite_Dictionary[ enum_sprite ]
+    
+    @overload
+    def GetSprite( self, enum_sprite:Enemy_Sprites_Types ):
         return self.Sprite_Dictionary[ enum_sprite ]
     
     

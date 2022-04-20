@@ -13,8 +13,9 @@ import ImageRegister as IR
 import InGame_Parameters as IGP
 import LevelMaker
 from Player import Player
+from Enemy import Zombie
 # import json
-
+import ScenaryObjects as SCN_OBJ
 
 # background_rect = background_image.get_rect()
 # background_rect.topleft = (0, 0)
@@ -67,6 +68,21 @@ class ZombieGame( SKG.Game ):
                          IGP.GAME_SPRITES_GROUPS["PlayerBullet_Group"] )
         self.player = player       
         IGP.GAME_SPRITES_GROUPS["Player_Group"].add( player )
+        
+
+        # Create a Ruby --> ONLY FOR DEBUGING PROCESS
+        ruby = SCN_OBJ.Ruby( self.sprite_dictionary, 
+                                IGP.GAME_SPRITES_GROUPS["Platform_Group"], 
+                                IGP.GAME_SPRITES_GROUPS["Portals_Group"] )
+        IGP.GAME_SPRITES_GROUPS["Rubies_Group"].add( ruby )
+        
+        
+        # Create an Enemy --> ONLY FOR DEBUGING PROCESS
+        enemy = Zombie( self.sprite_dictionary, 
+                         IGP.GAME_SPRITES_GROUPS["Platform_Group"],
+                         IGP.GAME_SPRITES_GROUPS["Portals_Group"],
+                         5, 10 )
+        IGP.GAME_SPRITES_GROUPS["Enemies_Group"].add( enemy )
 
         
         
@@ -79,7 +95,7 @@ class ZombieGame( SKG.Game ):
         # Fill the display surface to cover old images
         self.display_surface.blit( self.sprite_dictionary.GetSprite( IR.Levels_Sprites_Types.BACKGROUND_IMAGE ), self.background_rect )   
 
-        #Draw tiles
+        #Draw tiles and Update Tiles
         self.all_tiles_group.draw( self.display_surface )
         self.all_tiles_group.update()
 
@@ -91,9 +107,18 @@ class ZombieGame( SKG.Game ):
         self.bullet_group.update()
         self.bullet_group.draw( self.display_surface )
         
+        # Draw and Update Rubies
+        self.enemies_group.update()
+        self.enemies_group.draw( self.display_surface )
+        
         # Draw and Update Portals
         self.portals_group.update()
         self.portals_group.draw( self.display_surface )
+
+        # Draw and Update Rubies
+        self.rubi_groups.update()
+        self.rubi_groups.draw( self.display_surface )
+
 
         # Update Clock Game
         pygame.display.update()
@@ -111,10 +136,10 @@ class ZombieGame( SKG.Game ):
             if event.type == pygame.KEYDOWN:
                 #Player wants to jump
                 if event.key == pygame.K_SPACE:
-                    self.player.jump()
+                    self.player.fire() 
                 #Player wants to fire
                 if event.key == pygame.K_UP:
-                    self.player.fire()
+                    self.player.jump()
                         
                         
 
