@@ -20,6 +20,11 @@ import ScenaryObjects as SCN_OBJ
 # background_rect = background_image.get_rect()
 # background_rect.topleft = (0, 0)
 
+# RUBY_TIMEOUT = pygame.USEREVENT
+RUBY_TIMEOUT        = pygame.event.custom_type()
+ZOMBI_TIMEOUT       = pygame.event.custom_type()
+ONE_SECOND_TIMEOUT  = pygame.event.custom_type() 
+
 class ZombieGame( SKG.Game ):
     
     def __init__( self ):
@@ -69,22 +74,79 @@ class ZombieGame( SKG.Game ):
         self.player = player       
         IGP.GAME_SPRITES_GROUPS["Player_Group"].add( player )
         
+        self.round_time_duration_count = STF.INITIAL_ROUND_TIME
+        
 
-        # Create a Ruby --> ONLY FOR DEBUGING PROCESS
-        ruby = SCN_OBJ.Ruby( self.sprite_dictionary, 
-                                IGP.GAME_SPRITES_GROUPS["Platform_Group"], 
-                                IGP.GAME_SPRITES_GROUPS["Portals_Group"] )
-        IGP.GAME_SPRITES_GROUPS["Rubies_Group"].add( ruby )
+        pygame.time.set_timer( RUBY_TIMEOUT, STF.STANDAR_RUBY_TIME_CREATION )
+        pygame.time.set_timer( ZOMBI_TIMEOUT, STF.STANDAR_ZOMBI_TIME_CREATION )
+        pygame.time.set_timer( ONE_SECOND_TIMEOUT, 1000 )
         
+    
+    def addRuby( self ):
         
-        # Create an Enemy --> ONLY FOR DEBUGING PROCESS
-        enemy = Zombie( self.sprite_dictionary, 
-                         IGP.GAME_SPRITES_GROUPS["Platform_Group"],
-                         IGP.GAME_SPRITES_GROUPS["Portals_Group"],
-                         5, 10 )
-        IGP.GAME_SPRITES_GROUPS["Enemies_Group"].add( enemy )
+        if IGP.GAME_PARAMETERS["Rubies_Count"] < STF.MAX_RUBIES_ALLOWED:
+            ruby = SCN_OBJ.Ruby( self.sprite_dictionary, 
+                                    IGP.GAME_SPRITES_GROUPS["Platform_Group"], 
+                                    IGP.GAME_SPRITES_GROUPS["Portals_Group"] )
+            self.rubi_groups.add( ruby )
+            IGP.GAME_PARAMETERS["Rubies_Count"] += 1
+            
+        
+    def addZombie( self ):
 
+        round_number = IGP.GAME_PARAMETERS["Round"] + 3
+        if IGP.GAME_PARAMETERS["Zombies_Count"] <= STF.MAX_ZOMBIES_ALLOWED:
+            zombi = Zombie( self.sprite_dictionary, 
+                           IGP.GAME_SPRITES_GROUPS["Platform_Group"], 
+                           IGP.GAME_SPRITES_GROUPS["Portals_Group"],
+                           round_number, round_number + 5 )
+            self.enemies_group.add( zombi )
+            IGP.GAME_PARAMETERS["Zombies_Count"] += 1        
         
+    def resetGame( self ):
+        
+        IGP.GAME_PARAMETERS["Score"] = 0
+        IGP.GAME_PARAMETERS["Round"] = 1
+        
+        self.round_time_duration_count = STF.INITIAL_ROUND_TIME
+
+        #Reset the player
+        self.player.health = self.player.STARTING_HEALTH
+        self.player.reset()
+
+        #Empty sprite groups
+        self.enemies_group.empty()
+        self.rubi_groups.empty()
+        self.bullet_group.empty()
+
+        # pygame.mixer.music.play(-1, 0.0)
+        pass
+    
+    
+    def start_new_round( self ):
+        
+        IGP.GAME_PARAMETERS["Round"] += 1
+        self.round_time_duration_count += 15
+
+        self.zombie_group.empty()
+        self.ruby_group.empty()
+        self.bullet_group.empty()
+
+        self.player.reset()
+        pass
+    
+    def check_GameOver( self ):
+        if self.player.health <= 0:
+            # pygame.mixer.music.stop()
+            # self.pause_game("Game Over! Final Score: " + str(self.score), "Press 'Enter' to play again...")
+            self.reset_game()
+        pass
+    
+    def check_RoundCompleted( self ):
+        if self.round_time_duration_count <= 0:
+            print("Round_Complete")
+        pass
+    
         
     def __UpdateGameState__( self ):
         """
@@ -140,7 +202,16 @@ class ZombieGame( SKG.Game ):
                 #Player wants to fire
                 if event.key == pygame.K_UP:
                     self.player.jump()
-                        
+                
+            if event.type == RUBY_TIMEOUT:
+                self.addRuby()
+            
+            if event.type == ZOMBI_TIMEOUT:
+                    self.addZombie()
+            
+            if event.type == ONE_SECOND_TIMEOUT:
+                    self.round_time_duration_count -= 1
+                    self.check_RoundCompleted()
                         
 
     

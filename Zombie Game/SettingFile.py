@@ -7,7 +7,7 @@ In this file we make the definition of all Setting for the game
 """
 
 # Game Name
-GAME_NAME = "Zombie Knight"
+GAME_NAME = "Zombie Nightmare"
 
 # Setting for Display
 WINDOW_WIDTH = 1280 ; WINDOW_HEIGHT = 720
@@ -41,3 +41,11 @@ MAX_PLAYER_BULLETS = 2; MAX_ENEMIES_BULLETS = 3
 # Speed Enemies and Player
 ENEMIES_SPEED   = 3;  ENEMIES_BULLET_SPEED    = 10
 PLAYER_SPEED    = 6;  PLAYER_BULLET_SPEED     = 12
+
+# Rubies
+MAX_RUBIES_ALLOWED = 5; STANDAR_RUBY_TIME_CREATION = 10000 # Miliseconds
+
+# Zombies
+MAX_ZOMBIES_ALLOWED = 10; STANDAR_ZOMBI_TIME_CREATION = 10000 # Miliseconds
+
+INITIAL_ROUND_TIME = 30

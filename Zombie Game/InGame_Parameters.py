@@ -20,6 +20,7 @@ class GAME_STATES( IntEnum ):
     MOVE2RUNNING    = 3
     MOVE2NEWROUND   = 4
     NEXTROUND       = 5
+    LOAD_NEW_ROUND  = 6
 
 """
     Dictionary with main parameters of game
@@ -27,10 +28,11 @@ class GAME_STATES( IntEnum ):
 GAME_PARAMETERS = {
     "Round": 1,
     "Score": 0,
-    "Lives": 5,
     "GameState": GAME_STATES.INIT,
     "DebugMode": False,
-    "CanvasGame": None
+    "CanvasGame": None,
+    "Rubies_Count": 0,
+    "Zombies_Count": 0
 }
 
 """

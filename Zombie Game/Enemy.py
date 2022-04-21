@@ -174,7 +174,7 @@ class Zombie(pygame.sprite.Sprite):
         else:
             self.desactivate_teleport_count += 1
             
-        if self.desactivate_teleport_count >= 15:
+        if self.desactivate_teleport_count >= 30:
             self.desactivate_teleport_count = 0
             self.teleportActivate = False
 
