@@ -16,6 +16,7 @@ from Player import Player
 from Enemy import Zombie
 # import json
 import ScenaryObjects as SCN_OBJ
+import Game_HUD
 
 # background_rect = background_image.get_rect()
 # background_rect.topleft = (0, 0)
@@ -30,6 +31,7 @@ class ZombieGame( SKG.Game ):
     def __init__( self ):
         # Calling the init method from Base Class
         super().__init__()
+        self.game_hud = Game_HUD.GameHUD( self.display_surface )
         
         # Setting Canvas Display to Game Dictionary
         IGP.GAME_PARAMETERS["CanvasGame"] = self.display_surface
@@ -55,14 +57,16 @@ class ZombieGame( SKG.Game ):
         IGP.GAME_SPRITES_GROUPS["Rubies_Group"]         = self.rubi_groups
         IGP.GAME_SPRITES_GROUPS["PlayerBullet_Group"]   = self.bullet_group
         
-        
+
+    def _StartGame_( self ):
+        # Create Level        
         self.background_rect = self.sprite_dictionary.GetSprite( IR.Levels_Sprites_Types.BACKGROUND_IMAGE ).get_rect()
         self.background_rect.topleft = ( 0, 0 )
-        
+    
         level_builder = LevelMaker.LevelMaker(STF.PATH_LEVEL_JSON, self.all_tiles_group, self.platforms_group, self.portals_group, self.sprite_dictionary )
         self.isMapBult = level_builder.IsMapBuilded()
         
-        
+
         # Create Player
         player_pos = level_builder.GetPlayerPosition()
         player = Player( player_pos[ 0 ]*32 - 32, 
@@ -76,12 +80,11 @@ class ZombieGame( SKG.Game ):
         
         self.round_time_duration_count = STF.INITIAL_ROUND_TIME
         
-
         pygame.time.set_timer( RUBY_TIMEOUT, STF.STANDAR_RUBY_TIME_CREATION )
         pygame.time.set_timer( ZOMBI_TIMEOUT, STF.STANDAR_ZOMBI_TIME_CREATION )
         pygame.time.set_timer( ONE_SECOND_TIMEOUT, 1000 )
         
-    
+        
     def addRuby( self ):
         
         if IGP.GAME_PARAMETERS["Rubies_Count"] < STF.MAX_RUBIES_ALLOWED:
@@ -90,8 +93,7 @@ class ZombieGame( SKG.Game ):
                                     IGP.GAME_SPRITES_GROUPS["Portals_Group"] )
             self.rubi_groups.add( ruby )
             IGP.GAME_PARAMETERS["Rubies_Count"] += 1
-            
-        
+                
     def addZombie( self ):
 
         round_number = IGP.GAME_PARAMETERS["Round"] + 3
@@ -122,7 +124,6 @@ class ZombieGame( SKG.Game ):
         # pygame.mixer.music.play(-1, 0.0)
         pass
     
-    
     def start_new_round( self ):
         
         IGP.GAME_PARAMETERS["Round"] += 1
@@ -147,15 +148,61 @@ class ZombieGame( SKG.Game ):
             print("Round_Complete")
         pass
     
-        
+
+
+
     def __UpdateGameState__( self ):
         """
             Update Logic Game each Frame Game. This is the function that the base clase
             Game is executation countinously inside the loop game
         """
-        
         # Fill the display surface to cover old images
-        self.display_surface.blit( self.sprite_dictionary.GetSprite( IR.Levels_Sprites_Types.BACKGROUND_IMAGE ), self.background_rect )   
+        self.display_surface.fill( STF.BLACK )   
+
+        # WRITE HERE LOGIC GAME
+        gamestate = IGP.GAME_PARAMETERS["GameState"]
+        # Update the game in function of the GameState Current
+        self._UpdateGame_InFunctionGameSate_( gamestate )
+
+        # Update Clock Game
+        pygame.display.update()
+        self.clockGame.tick( STF.FPS )
+
+
+    def _UpdateGame_InFunctionGameSate_( self, game_state ):
+        """Update the game in function of the current state of the game"""
+        
+        if game_state == IGP.GAME_STATES.INIT_SCREEN:
+            self.game_hud.draw_Init_Screen()
+        
+        if game_state == IGP.GAME_STATES.GAME_OVER_SCREEN:
+            self.game_hud.draw_GameOver_Screen()
+        
+        if game_state == IGP.GAME_STATES.NEXT_ROUND_SCREEN:
+            self.game_hud.draw_New_Round_Screen()
+            
+        if game_state == IGP.GAME_STATES.GAME_RUNNING:
+            self._UpdateGame_()
+        
+        if game_state == IGP.GAME_STATES.GAME_OVER:
+            self.resetGame()
+            IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.INIT_SCREEN
+            
+        if game_state == IGP.GAME_STATES.NEXT_ROUND:
+            self.start_new_round()
+            IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.GAME_RUNNING
+        
+        if game_state == IGP.GAME_STATES.MOVE_2_START:
+            self._StartGame_()
+            IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.GAME_RUNNING
+        
+
+    
+    def _UpdateGame_( self ):
+        """Update the Game Logic when the state is RUNNING"""
+
+        # Fill the display surface to cover old images
+        self.display_surface.blit( self.sprite_dictionary.GetSprite( IR.Levels_Sprites_Types.BACKGROUND_IMAGE ), self.background_rect )           
 
         #Draw tiles and Update Tiles
         self.all_tiles_group.draw( self.display_surface )
@@ -180,11 +227,9 @@ class ZombieGame( SKG.Game ):
         # Draw and Update Rubies
         self.rubi_groups.update()
         self.rubi_groups.draw( self.display_surface )
-
-
-        # Update Clock Game
-        pygame.display.update()
-        self.clockGame.tick( STF.FPS )
+        
+        # Update Game HUD
+        self.game_hud.draw_HUB_GameScreen( self.player.health, self.round_time_duration_count )
         
         
     def _CheckingEvents_( self ):
@@ -202,6 +247,17 @@ class ZombieGame( SKG.Game ):
                 #Player wants to fire
                 if event.key == pygame.K_UP:
                     self.player.jump()
+                
+                if event.key == pygame.K_RETURN:                    
+                    gamestate = IGP.GAME_PARAMETERS["GameState"]                    
+                    if gamestate == IGP.GAME_STATES.INIT_SCREEN:
+                        IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.MOVE_2_START
+                        
+                #     if gamestate == IGP.GAME_STATES.GAME_OVER_SCREEN:
+                #         IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.INIT
+                        
+                #     if gamestate == IGP.GAME_STATES.NEXT_ROUND_SCREEN:
+                #         IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.NEXT_ROUND
                 
             if event.type == RUBY_TIMEOUT:
                 self.addRuby()

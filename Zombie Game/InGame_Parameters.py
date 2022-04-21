@@ -14,13 +14,13 @@ from enum import unique, IntEnum
 """ ENUMS """
 @unique
 class GAME_STATES( IntEnum ):
-    RUNNING         = 0
-    GAME_OVER       = 1
-    INIT            = 2
-    MOVE2RUNNING    = 3
-    MOVE2NEWROUND   = 4
-    NEXTROUND       = 5
-    LOAD_NEW_ROUND  = 6
+    INIT_SCREEN         = 0
+    GAME_OVER_SCREEN    = 1
+    NEXT_ROUND_SCREEN   = 2
+    GAME_RUNNING        = 3
+    GAME_OVER           = 4
+    NEXT_ROUND          = 5
+    MOVE_2_START        = 6
 
 """
     Dictionary with main parameters of game
@@ -28,7 +28,7 @@ class GAME_STATES( IntEnum ):
 GAME_PARAMETERS = {
     "Round": 1,
     "Score": 0,
-    "GameState": GAME_STATES.INIT,
+    "GameState": GAME_STATES.INIT_SCREEN,
     "DebugMode": False,
     "CanvasGame": None,
     "Rubies_Count": 0,

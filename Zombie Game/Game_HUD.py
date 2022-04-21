@@ -18,18 +18,18 @@ class GameHUD():
         self.surface_display = surf_disp        
         
         #Set fonts
-        self.title_font = pygame.font.Font("Assets/fonts/Poultrygeist.ttf", 48)
-        self.HUD_font = pygame.font.Font("Assets/fonts/Pixel.ttf", 24)
+        self.title_font = pygame.font.Font("Assets/fonts/Poultrygeist.ttf", 60)
+        self.HUD_font = pygame.font.Font("Assets/fonts/Pixel.ttf", 30)
         
         
         # Fixed Messages
-        self.game_title = self.title_font.render( STF.GAME_NAME , True, STF.DARKRED )
+        self.game_title = self.title_font.render( STF.GAME_NAME , True, STF.GREEN )
         self.game_title_rect = self.game_title.get_rect()
-        self.game_title_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 - 1.5*STF.FONT_SIZE )
+        self.game_title_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 - 1*STF.FONT_SIZE )
 
         self.continue_text = self.HUD_font.render("Press 'Enter' key to play", True, STF.WHITE )
         self.continue_rect = self.continue_text.get_rect()
-        self.continue_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 + 1.5*STF.FONT_SIZE )
+        self.continue_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 + 1*STF.FONT_SIZE )
         
         # Text for GameOver and Reset Screen
         self.game_over_text = self.HUD_font.render("GAME OVER", True, STF.WHITE )
@@ -86,18 +86,17 @@ class GameHUD():
     def _updateScore_( self ):
         self.score_text = self.HUD_font.render("Score: " + str( IGP.GAME_PARAMETERS["Score"] ), True, STF.WHITE)
         self.score_rect = self.score_text.get_rect()
-        self.score_rect.centerx = STF.WINDOW_WIDTH//2
-        self.score_rect.top = 10
+        self.score_rect.center = ( STF.WINDOW_WIDTH - 150, STF.WINDOW_HEIGHT - 20 )
         
     def _updateLives_( self, health:int ):
         self.lives_text = self.HUD_font.render("Health: " + str( health ), True, STF.WHITE)
         self.lives_rect = self.lives_text.get_rect()
-        self.lives_rect.topright = (STF.WINDOW_WIDTH - 20, 10)
+        self.lives_rect.center = ( 150, STF.WINDOW_HEIGHT - 20 )
         
     def _updateRoundNumber_( self ):
         self.round_text = self.HUD_font.render("Round: " + str( IGP.GAME_PARAMETERS["Round"] ), True, STF.WHITE )
         self.round_rect = self.round_text.get_rect()
-        self.round_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 + 0*STF.FONT_SIZE )
+        self.round_rect.center = ( STF.WINDOW_WIDTH//2, 30 )
 
     def _update_RoundTime_( self, time_remain ):
         self.round_time_text = self.HUD_font.render("Round End: " + str( time_remain ), True, STF.WHITE)
@@ -109,5 +108,5 @@ class GameHUD():
     def _updateFinalScore_( self ):
         self.final_score = self.HUD_font.render("Your Score: " + str( IGP.GAME_PARAMETERS["Score"] ), True, STF.WHITE)
         self.final_score_rect = self.final_score.get_rect()
-        self.final_score_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 - (-0.25)*STF.FONT_SIZE )
+        self.final_score_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 + 3*STF.FONT_SIZE )
         
