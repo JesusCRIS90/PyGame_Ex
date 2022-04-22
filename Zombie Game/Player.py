@@ -52,10 +52,10 @@ class Player(pygame.sprite.Sprite):
         self.animate_fire = False
 
         #Load sounds
-        # self.jump_sound = pygame.mixer.Sound("sounds/jump_sound.wav")
-        # self.slash_sound = pygame.mixer.Sound("sounds/slash_sound.wav")
-        # self.portal_sound = pygame.mixer.Sound("sounds/portal_sound.wav")
-        # self.hit_sound = pygame.mixer.Sound("sounds/player_hit.wav")
+        self.jump_sound = pygame.mixer.Sound("Assets/sounds/jump_sound.wav")
+        self.slash_sound = pygame.mixer.Sound("Assets/sounds/slash_sound.wav")
+        self.portal_sound = pygame.mixer.Sound("Assets/sounds/portal_sound.wav")
+        self.hit_sound = pygame.mixer.Sound("Assets/sounds/player_hit.wav")
 
         #Kinematics vectors
         self.position = vector(x, y)
@@ -91,7 +91,7 @@ class Player(pygame.sprite.Sprite):
     def hit_received( self ):
         self.increase_health( -25 )
         self.invulnerability = True
-        # self.hit_sound.play()
+        self.hit_sound.play()
         pass
     
 
@@ -163,10 +163,10 @@ class Player(pygame.sprite.Sprite):
 
         #Collision check for portals
         collision_portal = pygame.sprite.spritecollide(self, self.portal_group, False)
-        #     self.portal_sound.play()
         
         # Determine which portal you are moving to
         if collision_portal:
+            self.portal_sound.play()
             for portal in collision_portal:
                 pos2move_player = Portal.GetPortal2Teletransport(portal.getUniqueID(), portal.getType() )
                 if pos2move_player != None:
@@ -199,14 +199,14 @@ class Player(pygame.sprite.Sprite):
         """Jump upwards if on a platform"""
         #Only jump if on a platform
         if pygame.sprite.spritecollide(self, self.platform_group, False):
-            # self.jump_sound.play()
+            self.jump_sound.play()
             self.velocity.y = -1*self.VERTICAL_JUMP_SPEED
             self.animate_jump = True
 
 
     def fire(self):
         """Fire a 'bullet' from a sword"""
-        # self.slash_sound.play()
+        self.slash_sound.play()
         Bullet( self.rect.centerx, self.rect.centery, self.imageRegister, self.bullet_group, self )
         self.animate_fire = True
         pass

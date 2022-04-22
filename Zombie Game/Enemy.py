@@ -84,9 +84,9 @@ class Zombie(pygame.sprite.Sprite):
         self.animate_rise = False
 
         # #Load sounds
-        # self.hit_sound = pygame.mixer.Sound("sounds/zombie_hit.wav")
-        # self.kick_sound = pygame.mixer.Sound("sounds/zombie_kick.wav")
-        # self.portal_sound = pygame.mixer.Sound("sounds/portal_sound.wav")
+        self.hit_sound = pygame.mixer.Sound("Assets/sounds/zombie_hit.wav")
+        self.kick_sound = pygame.mixer.Sound("Assets/sounds/zombie_kick.wav")
+        self.portal_sound = pygame.mixer.Sound("Assets/sounds/portal_sound.wav")
 
         #Kinematics vectors
         self.position = vector(self.rect.x, self.rect.y)
@@ -152,6 +152,7 @@ class Zombie(pygame.sprite.Sprite):
         collision_enemy_portal = pygame.sprite.spritecollide(self, self.portal_group, False)
         # Determine which portal you are moving to
         if collision_enemy_portal:
+            self.portal_sound.play()
             for portal in collision_enemy_portal:
                 pos2move = Portal.GetPortal2Teletransport(portal.getUniqueID(), portal.getType() )
                 if pos2move != None:
