@@ -67,6 +67,10 @@ class Player(pygame.sprite.Sprite):
         self.health         = self.STARTING_HEALTH
         self.starting_x     = x
         self.starting_y     = y
+        
+        # Invulnerability period after receive a hit
+        self.invulnerability = False
+        self.invulnerability_count = 0
 
 
     def update(self):
@@ -79,6 +83,17 @@ class Player(pygame.sprite.Sprite):
         # self.mask = pygame.mask.from_surface(self.image)
         pass
 
+    def increase_health( self, increase:int ):
+        self.health += increase
+        if self.health > self.STARTING_HEALTH:
+            self.health = self.STARTING_HEALTH
+            
+    def hit_received( self ):
+        self.increase_health( -25 )
+        self.invulnerability = True
+        # self.hit_sound.play()
+        pass
+    
 
     def move(self):
         """Move the player"""

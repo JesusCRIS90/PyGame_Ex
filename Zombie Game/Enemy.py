@@ -34,8 +34,8 @@ class Zombie(pygame.sprite.Sprite):
         self.walk_left_sprites      = []
         self.die_right_sprites      = []
         self.die_left_sprites       = []
-        # self.rise_right_sprites     = []
-        # self.rise_left_sprites      = []
+        self.rise_right_sprites     = []
+        self.rise_left_sprites      = []
 
         gender = random.randint(0,1)
         if gender == 0:
@@ -54,6 +54,10 @@ class Zombie(pygame.sprite.Sprite):
             self.die_right_sprites      = imag_reg.GetSprite( EnemySprite.FEMALE_ZOMBIE_DIE_RIGTH )
             self.die_left_sprites       = imag_reg.GetSprite( EnemySprite.FEMALE_ZOMBIE_DIE_LEFT )
             
+            
+        # self.rise_right_sprites     = self.die_right_sprites.reverse()
+        # self.rise_left_sprites      = self.die_left_sprites.reverse()
+        
             
         #Load an image and get rect
         self.direction = random.choice( [-1, 1] )
@@ -99,18 +103,18 @@ class Zombie(pygame.sprite.Sprite):
         """Update the zombie"""
         self.move()
         self.check_collisions()
-        # self.check_animations()
+        self.check_animations()
 
-        #Determine when the zombie should rise from the dead
-        if self.is_dead:
-            self.frame_count += 1
-            if self.frame_count % STF.FPS == 0:
-                self.round_time += 1
-                if self.round_time == self.RISE_TIME:
-                    self.animate_rise = True
-                    #When the zombie died, the image was kept as the last image
-                    #When it rises, we want to start at index 0 of our rise_sprite lists
-                    self.current_sprite = 0
+        # #Determine when the zombie should rise from the dead
+        # if self.is_dead:
+        #     self.frame_count += 1
+        #     if self.frame_count % STF.FPS == 0:
+        #         self.round_time += 1
+        #         if self.round_time == self.RISE_TIME:
+        #             self.animate_rise = True
+        #             #When the zombie died, the image was kept as the last image
+        #             #When it rises, we want to start at index 0 of our rise_sprite lists
+        #             self.current_sprite = 0
 
 
     def _teleport2position_( self, pos, offset ):
@@ -168,7 +172,7 @@ class Zombie(pygame.sprite.Sprite):
             self.position.y = collided_platforms[0].rect.top + 3
             self.velocity.y = 0
             
-        #   During 60 frames, desactivate portals collisions
+        #   During 30 frames, desactivate portals collisions
         if self.teleportActivate == False:
             self.check_collisions_with_portals()
         else:
@@ -201,9 +205,9 @@ class Zombie(pygame.sprite.Sprite):
         #Animate the zombie death
         if self.animate_death:
             if self.direction == 1:
-                self.animate(self.die_right_sprites, .095)
+                self.animate(self.die_right_sprites, 1 )
             else:
-                self.animate(self.die_left_sprites, .095)
+                self.animate(self.die_left_sprites, .1 )
 
         #Animate the zombie rise
         if self.animate_rise:

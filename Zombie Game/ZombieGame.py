@@ -57,6 +57,8 @@ class ZombieGame( SKG.Game ):
         IGP.GAME_SPRITES_GROUPS["Rubies_Group"]         = self.rubi_groups
         IGP.GAME_SPRITES_GROUPS["PlayerBullet_Group"]   = self.bullet_group
         
+        self.round_time_duration_count = STF.INITIAL_ROUND_TIME
+        
 
     def _StartGame_( self ):
         # Create Level        
@@ -78,7 +80,6 @@ class ZombieGame( SKG.Game ):
         self.player = player       
         IGP.GAME_SPRITES_GROUPS["Player_Group"].add( player )
         
-        self.round_time_duration_count = STF.INITIAL_ROUND_TIME
         
         pygame.time.set_timer( RUBY_TIMEOUT, STF.STANDAR_RUBY_TIME_CREATION )
         pygame.time.set_timer( ZOMBI_TIMEOUT, STF.STANDAR_ZOMBI_TIME_CREATION )
@@ -113,41 +114,42 @@ class ZombieGame( SKG.Game ):
         self.round_time_duration_count = STF.INITIAL_ROUND_TIME
 
         #Reset the player
-        self.player.health = self.player.STARTING_HEALTH
-        self.player.reset()
+        # self.player.health = self.player.STARTING_HEALTH
+        # self.player.reset()
 
         #Empty sprite groups
+        self.player_gruop.empty()
         self.enemies_group.empty()
         self.rubi_groups.empty()
         self.bullet_group.empty()
+        self.portals_group.empty()
+        self.platforms_group.empty() 
 
         # pygame.mixer.music.play(-1, 0.0)
-        pass
+  
+    
     
     def start_new_round( self ):
         
         IGP.GAME_PARAMETERS["Round"] += 1
-        self.round_time_duration_count += 15
+        self.round_time_duration_count = STF.INITIAL_ROUND_TIME + ( IGP.GAME_PARAMETERS["Round"] - 1 ) * 10
 
-        self.zombie_group.empty()
-        self.ruby_group.empty()
+        self.enemies_group.empty()
+        self.rubi_groups.empty()
         self.bullet_group.empty()
 
         self.player.reset()
-        pass
+        
     
     def check_GameOver( self ):
         if self.player.health <= 0:
             # pygame.mixer.music.stop()
-            # self.pause_game("Game Over! Final Score: " + str(self.score), "Press 'Enter' to play again...")
-            self.reset_game()
-        pass
+            IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.GAME_OVER_SCREEN     
+
     
     def check_RoundCompleted( self ):
         if self.round_time_duration_count <= 0:
-            print("Round_Complete")
-        pass
-    
+            IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.NEXT_ROUND_SCREEN    
 
 
 
@@ -228,10 +230,88 @@ class ZombieGame( SKG.Game ):
         self.rubi_groups.update()
         self.rubi_groups.draw( self.display_surface )
         
+        # CheckCollision
+        self._CheckCollisions_()
+        
+        
+        self.check_GameOver()
+        
         # Update Game HUD
         self.game_hud.draw_HUB_GameScreen( self.player.health, self.round_time_duration_count )
         
+    
+    
+    def _CheckCollision_Player_Ruby_( self ):
         
+        #See if a player collided with a ruby
+        if pygame.sprite.spritecollide(self.player, self.rubi_groups, True):
+            # self.ruby_pickup_sound.play()
+            IGP.GAME_PARAMETERS["Score"] += 100
+            IGP.GAME_PARAMETERS["Rubies_Count"] -= 1
+            self.player.increase_health( 10 )
+            
+    
+    def _CheckCollision_Enemy_Ruby_( self ):
+        #See if a living zombie collided with a ruby
+        for zombie in self.enemies_group:
+            if zombie.is_dead == True:
+                if pygame.sprite.spritecollide(zombie, self.rubi_groups, True):
+                    # self.lost_ruby_sound.play()
+                    # zombie = Zombie(self.platform_group, self.portal_group, self.round_number, 5 + self.round_number)
+                    # self.zombie_group.add(zombie)
+                    IGP.GAME_PARAMETERS["Rubies_Count"] -= 1
+                    print( "In Development - Revive Zombi" )
+        pass
+    
+    def _CheckCollision_Bullet_Zombie_( self ):
+        #See if any bullet in the bullet group hit a zombie in the zombie group
+        collision_dict = pygame.sprite.groupcollide(self.bullet_group, self.enemies_group, True, False)
+        if collision_dict:
+            for zombies in collision_dict.values():
+                for zombie in zombies:
+                    # zombie.hit_sound.play()
+                    zombie.is_dead = True
+                    zombie.animate_death = True
+        pass
+    
+    def _CheckCollision_Player_Zombie_( self ):
+        #See if a player stomped a dead zombie to finish it or collided with a live zombie to take damage
+        if self.player.invulnerability == False:
+            collision_list = pygame.sprite.spritecollide(self.player, self.enemies_group, False)
+            if collision_list:
+                for zombie in collision_list:
+                    
+                    #The zombie is dead; stomp it
+                    if zombie.is_dead == True:
+                        # zombie.kick_sound.play()
+                        zombie.kill(); IGP.GAME_PARAMETERS["Zombies_Count"] -= 1
+                        IGP.GAME_PARAMETERS["Score"] += 25
+    
+                        self.addRuby()
+                        
+                    #The zombie isn't dead, so take damage
+                    else:
+                        self.player.hit_received()
+                        
+        else:    
+        # About 30 Frames the player will not received any damage
+            self.player.invulnerability_count += 1
+            if( self.player.invulnerability_count > 30 ):
+                self.player.invulnerability_count = 0
+                self.player.invulnerability = False
+            
+        pass
+    
+    def _CheckCollisions_( self ):
+        
+        self._CheckCollision_Bullet_Zombie_()
+        self._CheckCollision_Player_Zombie_()
+        self._CheckCollision_Player_Ruby_()
+        self._CheckCollision_Enemy_Ruby_()
+        
+        
+    
+    
     def _CheckingEvents_( self ):
         """Checking Player Events"""
         # Loop through a list of Event Objects that have occured
@@ -253,11 +333,11 @@ class ZombieGame( SKG.Game ):
                     if gamestate == IGP.GAME_STATES.INIT_SCREEN:
                         IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.MOVE_2_START
                         
-                #     if gamestate == IGP.GAME_STATES.GAME_OVER_SCREEN:
-                #         IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.INIT
+                    if gamestate == IGP.GAME_STATES.GAME_OVER_SCREEN:
+                        IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.GAME_OVER
                         
-                #     if gamestate == IGP.GAME_STATES.NEXT_ROUND_SCREEN:
-                #         IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.NEXT_ROUND
+                    if gamestate == IGP.GAME_STATES.NEXT_ROUND_SCREEN:
+                        IGP.GAME_PARAMETERS["GameState"] = IGP.GAME_STATES.NEXT_ROUND
                 
             if event.type == RUBY_TIMEOUT:
                 self.addRuby()
