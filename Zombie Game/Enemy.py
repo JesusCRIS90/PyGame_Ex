@@ -14,6 +14,7 @@ from ScenaryObjects import Portal
 from ImageRegister import Enemy_Sprites_Types as EnemySprite
 # from ImageRegister import Bullet_Player_Sprites_Types as BulletSprite
 
+
 #Use 2D vectors
 vector = pygame.math.Vector2
 
@@ -45,6 +46,9 @@ class Zombie(pygame.sprite.Sprite):
 
             self.die_right_sprites      = imag_reg.GetSprite( EnemySprite.MALE_ZOMBIE_DIE_RIGTH )
             self.die_left_sprites       = imag_reg.GetSprite( EnemySprite.MALE_ZOMBIE_DIE_LEFT )
+            
+            self.rise_right_sprites      = imag_reg.GetSprite( EnemySprite.MALE_ZOMBIE_RISE_RIGTH )
+            self.rise_left_sprites       = imag_reg.GetSprite( EnemySprite.MALE_ZOMBIE_RISE_LEFT )
 
         else:
             
@@ -54,9 +58,9 @@ class Zombie(pygame.sprite.Sprite):
             self.die_right_sprites      = imag_reg.GetSprite( EnemySprite.FEMALE_ZOMBIE_DIE_RIGTH )
             self.die_left_sprites       = imag_reg.GetSprite( EnemySprite.FEMALE_ZOMBIE_DIE_LEFT )
             
+            self.rise_right_sprites      = imag_reg.GetSprite( EnemySprite.FEMALE_ZOMBIE_RISE_RIGTH )
+            self.rise_left_sprites       = imag_reg.GetSprite( EnemySprite.FEMALE_ZOMBIE_RISE_LEFT )
             
-        # self.rise_right_sprites     = self.die_right_sprites.reverse()
-        # self.rise_left_sprites      = self.die_left_sprites.reverse()
         
             
         #Load an image and get rect
@@ -97,6 +101,7 @@ class Zombie(pygame.sprite.Sprite):
         self.is_dead = False
         self.round_time = 0
         self.frame_count = 0
+        self.rise_time_count = 0
 
 
     def update(self):
@@ -104,17 +109,6 @@ class Zombie(pygame.sprite.Sprite):
         self.move()
         self.check_collisions()
         self.check_animations()
-
-        # #Determine when the zombie should rise from the dead
-        # if self.is_dead:
-        #     self.frame_count += 1
-        #     if self.frame_count % STF.FPS == 0:
-        #         self.round_time += 1
-        #         if self.round_time == self.RISE_TIME:
-        #             self.animate_rise = True
-        #             #When the zombie died, the image was kept as the last image
-        #             #When it rises, we want to start at index 0 of our rise_sprite lists
-        #             self.current_sprite = 0
 
 
     def _teleport2position_( self, pos, offset ):
@@ -124,6 +118,11 @@ class Zombie(pygame.sprite.Sprite):
         self.rect.bottomleft = self.position
         
         self.teleportActivate = True
+
+    def rise_zombie( self ):
+        self.animate_rise = True
+        self.current_sprite = 0
+        self.rise_time_count = 0
 
     def move(self):
         """Move the zombie"""
@@ -162,7 +161,6 @@ class Zombie(pygame.sprite.Sprite):
                         offset = ( 0, -10 )
                     self._teleport2position_( pos2move, offset )
             
-
             self.rect.bottomleft = self.position
 
     def check_collisions(self):
@@ -183,22 +181,13 @@ class Zombie(pygame.sprite.Sprite):
             self.desactivate_teleport_count = 0
             self.teleportActivate = False
 
-        # #Collision check for portals
-        # if pygame.sprite.spritecollide(self, self.portal_group, False):
-        #     self.portal_sound.play()
-        #     #Determine which portal you are moving to
-        #     #Left and right
-        #     if self.position.x > STF.WINDOW_WIDTH//2:
-        #         self.position.x = 86
-        #     else:
-        #         self.position.x = STF.WINDOW_WIDTH - 150
-        #     #Top and bottom
-        #     if self.position.y > STF.WINDOW_HEIGHT//2:
-        #         self.position.y = 64
-        #     else:
-        #         self.position.y = STF.WINDOW_HEIGHT - 132
 
-        #     self.rect.bottomleft = self.position
+    def check_rise_timeout( self ):
+        if self.is_dead:
+            self.rise_time_count += 1
+        
+        if self.rise_time_count >= 5:
+            self.rise_zombie()
 
 
     def check_animations(self):
@@ -213,9 +202,9 @@ class Zombie(pygame.sprite.Sprite):
         #Animate the zombie rise
         if self.animate_rise:
             if self.direction == 1:
-                self.animate(self.rise_right_sprites, .095)
+                self.animate(self.rise_right_sprites, 1)
             else:
-                self.animate(self.rise_left_sprites, .095)
+                self.animate(self.rise_left_sprites, 1)
 
 
     def animate(self, sprite_list, speed):

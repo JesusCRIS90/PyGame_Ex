@@ -50,7 +50,7 @@ class Tile(pygame.sprite.Sprite):
         self.rect.topleft = (x, y)
 
         #Create a mask for better player collisions
-        # self.mask = pygame.mask.from_surface(self.image)
+        self.mask = pygame.mask.from_surface(self.image)
     
     def update( self ):
         if IGP.GAME_PARAMETERS["DebugMode"] == True:
@@ -79,7 +79,6 @@ class LevelMaker():
     
     def GetPlayerPosition( self ):
         return self.player_position
-        # pass
 
     
     def _Build_Map_( self, tile_map:list, all_tiles_group:Group, platforms_group:Group, portals_groups:Group, imag_reg:IR.ImageRegister ):

@@ -184,7 +184,6 @@ class Ruby(pygame.sprite.Sprite):
             self.rect.bottomleft = self.position
 
 
-
     def check_collisions(self):
         """Check for collisions with platforms and portals"""
         #Collision check between ruby and platforms when falling
@@ -203,9 +202,6 @@ class Ruby(pygame.sprite.Sprite):
             self.desactivate_teleport_count = 0
             self.teleportActivate = False
         
-        
-        
-
 
     def animate(self, sprite_list, speed):
         """Animate the ruby"""

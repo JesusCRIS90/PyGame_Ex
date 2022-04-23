@@ -80,8 +80,8 @@ class Player(pygame.sprite.Sprite):
         self.check_animations()
 
         # #Update the players mask
-        # self.mask = pygame.mask.from_surface(self.image)
-        pass
+        self.mask = pygame.mask.from_surface(self.image)
+
 
     def increase_health( self, increase:int ):
         self.health += increase
@@ -92,7 +92,6 @@ class Player(pygame.sprite.Sprite):
         self.increase_health( -25 )
         self.invulnerability = True
         self.hit_sound.play()
-        pass
     
 
     def move(self):
@@ -102,7 +101,6 @@ class Player(pygame.sprite.Sprite):
 
         #If the user is pressing a key, set the x-component of the acceleration to be non-zero
         keys = pygame.key.get_pressed()
-        
         
         if keys[ pygame.K_LEFT ]:
             self.acceleration.x = -1*self.HORIZONTAL_ACCELERATION
@@ -136,11 +134,10 @@ class Player(pygame.sprite.Sprite):
 
 
     def _teleport2position_( self, pos, offset ):
-        # print( [ pos, offset ] )
         self.position.x = pos[ 0 ] + offset[ 0 ]
         self.position.y = pos[ 1 ] + offset[ 1 ]
         self.rect.bottomleft = self.position
-        pass
+
 
     def check_collisions(self):
         """Check for collisions with platforms and portals"""
@@ -162,8 +159,7 @@ class Player(pygame.sprite.Sprite):
                     self.rect.bottomleft = self.position
 
         #Collision check for portals
-        collision_portal = pygame.sprite.spritecollide(self, self.portal_group, False)
-        
+        collision_portal = pygame.sprite.spritecollide(self, self.portal_group, False)        
         # Determine which portal you are moving to
         if collision_portal:
             self.portal_sound.play()
@@ -176,7 +172,6 @@ class Player(pygame.sprite.Sprite):
                         offset = ( 100, 0 )
                     self._teleport2position_( pos2move_player, offset )
         
-
 
     def check_animations(self):
         """Check to see if jump/fire animations should run"""
@@ -209,7 +204,6 @@ class Player(pygame.sprite.Sprite):
         self.slash_sound.play()
         Bullet( self.rect.centerx, self.rect.centery, self.imageRegister, self.bullet_group, self )
         self.animate_fire = True
-        pass
 
 
     def reset(self):

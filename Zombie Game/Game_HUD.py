@@ -41,7 +41,6 @@ class GameHUD():
         self.round_completed_text_rect.center = ( STF.WINDOW_WIDTH//2, STF.WINDOW_HEIGHT//2 - 1*STF.FONT_SIZE )
 
 
-
     def update( self, health:int = 100, time_remain:int = 0 ):
         if IGP.GAME_PARAMETERS["GameState"] == IGP.GAME_STATES.INIT:
             self.draw_Init_Screen()
@@ -58,17 +57,14 @@ class GameHUD():
         self.surface_display.blit( self.continue_text, self.continue_rect )
         self.surface_display.blit( self.final_score, self.final_score_rect )
 
-
     def draw_Init_Screen( self ):
         # self._updateRoundNumber_()
         self.surface_display.blit( self.game_title, self.game_title_rect )
         self.surface_display.blit( self.continue_text, self.continue_rect )
 
-
     def draw_New_Round_Screen( self ):
         self.surface_display.blit( self.round_completed_text, self.round_completed_text_rect )
         self.surface_display.blit( self.continue_text, self.continue_rect )
-
 
     def draw_HUB_GameScreen( self, health:int, time_remain:int ):
         "Update the Game HUB Screen"
@@ -81,8 +77,6 @@ class GameHUD():
         self.surface_display.blit( self.round_text, self.round_rect )
         self.surface_display.blit( self.round_time_text, self.round_time_text_rect )
         
-
-
     def _updateScore_( self ):
         self.score_text = self.HUD_font.render("Score: " + str( IGP.GAME_PARAMETERS["Score"] ), True, STF.WHITE)
         self.score_rect = self.score_text.get_rect()
@@ -104,7 +98,6 @@ class GameHUD():
         self.round_time_text_rect.centerx = STF.WINDOW_WIDTH//2
         self.round_time_text_rect.top = 50
         
-
     def _updateFinalScore_( self ):
         self.final_score = self.HUD_font.render("Your Score: " + str( IGP.GAME_PARAMETERS["Score"] ), True, STF.WHITE)
         self.final_score_rect = self.final_score.get_rect()
