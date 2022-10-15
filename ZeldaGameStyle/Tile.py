@@ -11,9 +11,15 @@ class Tile(pygame.sprite.Sprite):
         self.image = None
         self.rect = None
         self.hitbox = None
+        self.sprite_type = enum_sprite
 
         if enum_sprite == Levels_Sprites_Types.ROCK_TEST:
             self.image = ImageRegister().GetSprite( Levels_Sprites_Types.ROCK_TEST )
+            self.rect  = self.image.get_rect( topleft = position )
+            self.hitbox = self.rect.inflate( 0, -10 )
+        
+        if enum_sprite == Levels_Sprites_Types.NONE_SPITE:
+            self.image = pygame.Surface( ( STF.TILESIZE * 0.90, STF.TILESIZE * 0.9 ) )
             self.rect  = self.image.get_rect( topleft = position )
             self.hitbox = self.rect.inflate( 0, -10 )
 

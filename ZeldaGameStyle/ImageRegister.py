@@ -19,12 +19,13 @@ import copy
 
 @unique
 class Levels_Sprites_Types( IntEnum ):
-    ROCK_TEST                    = 0
-    BACKGROUND_IMAGE             = 1
+    BACKGROUND_IMAGE             = 0
+    ROCK_TEST                    = 1
+    NONE_SPITE                   = 2
 
 @unique
 class Player_Sprites_Types( IntEnum ):
-    PLAYER_TEST   = 2
+    PLAYER_TEST   = 100
 
 
 def CustomSingleton( cls ):
@@ -53,10 +54,11 @@ class ImageRegister( ):
 
                 
     def _Load_Player_Sprites_( self ):
-        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_TEST: pygame.image.load("Assets/player.png").convert_alpha() } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_TEST: pygame.image.load("Assets/Player/player.png").convert_alpha() } )
   
     def _Load_Levels_Sprites_( self ):
-        self.Sprite_Dictionary.update( { Levels_Sprites_Types.ROCK_TEST: pygame.image.load("Assets/rock.png").convert_alpha() } )
+        #self.Sprite_Dictionary.update( { Levels_Sprites_Types.ROCK_TEST: pygame.image.load("Assets/rock.png").convert_alpha() } )
+        self.Sprite_Dictionary.update( { Levels_Sprites_Types.BACKGROUND_IMAGE: pygame.image.load("Assets/WorldMap/ground.png").convert() } )
 
         
 
