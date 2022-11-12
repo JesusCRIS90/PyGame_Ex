@@ -5,7 +5,7 @@ from Player import Player
 from ImageRegister import *
 from debug import *
 import InGame_Parameters as IGP
-from support import * 
+from support import *
 
 class Level:
 
@@ -20,21 +20,38 @@ class Level:
         self.player = None
 
         self.create_map()
+        self.create_player()
 
     def create_map( self ):
         
-        layouts = load_layers_map( "Assets/WorldMap/MapLayers/Map_Layers.json" )
+        layouts = load_layers_map( "Assets/WorldMap/MapLayers/MapLayers.json" )
         
         for style, layout in layouts.items():
-            for row_index,row in enumerate( layout ):
+            self.create_layer( style, layout )
+        #     for row_index,row in enumerate( layout ):
+        #         for col_index, col in enumerate( row ):
+        #             if col != '-1':
+        #                 x = col_index * TILESIZE;   y = row_index * TILESIZE
+        #                 if style == 'boundary':
+        #                     Tile( (x, y), [ self.obstacle_sprites], Levels_Sprites_Types.NONE_SPITE )
+
+        # self.player = Player( ( 2000, 1430 ), [ self.visible_sprites ], Player_Sprites_Types.PLAYER_TEST, self.obstacle_sprites )
+        
+    def create_layer( self, layerName:str, layer:list ):
+        for row_index,row in enumerate( layer ):
                 for col_index, col in enumerate( row ):
                     if col != '-1':
                         x = col_index * TILESIZE;   y = row_index * TILESIZE
-                        if style == 'boundary':
-                            Tile( (x, y), [ self.obstacle_sprites], Levels_Sprites_Types.NONE_SPITE )
-
+                        if layerName == 'boundary':
+                            Tile( (x, y), [ self.obstacle_sprites], Levels_Sprites_Types.NONE_SPRITE )
+                        if layerName == 'grass':
+                            Tile( (x, y), [ self.obstacle_sprites, self.visible_sprites], Grass_Dict[ int( col ) ] )
+                        if layerName == 'object':
+                            Tile( ( x, y - TILESIZE ), [ self.obstacle_sprites, self.visible_sprites], Object_Dict[ int( col ) ] )
+    
+    def create_player( self ):
         self.player = Player( ( 2000, 1430 ), [ self.visible_sprites ], Player_Sprites_Types.PLAYER_TEST, self.obstacle_sprites )
-        
+
     def run( self ):
         #self.visible_sprites.draw( self.display_surface )
         self.visible_sprites.custom_draw( self.player )

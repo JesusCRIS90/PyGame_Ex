@@ -13,15 +13,31 @@ class Tile(pygame.sprite.Sprite):
         self.hitbox = None
         self.sprite_type = enum_sprite
 
-        if enum_sprite == Levels_Sprites_Types.ROCK_TEST:
-            self.image = ImageRegister().GetSprite( Levels_Sprites_Types.ROCK_TEST )
-            self.rect  = self.image.get_rect( topleft = position )
-            self.hitbox = self.rect.inflate( 0, -10 )
         
-        if enum_sprite == Levels_Sprites_Types.NONE_SPITE:
+        if enum_sprite == Levels_Sprites_Types.NONE_SPRITE:
             self.image = pygame.Surface( ( STF.TILESIZE * 0.90, STF.TILESIZE * 0.9 ) )
             self.rect  = self.image.get_rect( topleft = position )
             self.hitbox = self.rect.inflate( 0, -10 )
+
+        else:
+            self.image = ImageRegister().GetSprite( enum_sprite )
+            self.rect  = self.image.get_rect( topleft = position )
+            self.hitbox = self.rect.inflate( 0, -10 )
+
+        # if enum_sprite == Levels_Sprites_Types.GRASS_1:
+        #     self.image = ImageRegister().GetSprite( Levels_Sprites_Types.GRASS_1 )
+        #     self.rect  = self.image.get_rect( topleft = position )
+        #     self.hitbox = self.rect.inflate( 0, -10 )
+        
+        # if enum_sprite == Levels_Sprites_Types.GRASS_2:
+        #     self.image = ImageRegister().GetSprite( Levels_Sprites_Types.GRASS_2 )
+        #     self.rect  = self.image.get_rect( topleft = position )
+        #     self.hitbox = self.rect.inflate( 0, -10 )
+        
+        # if enum_sprite == Levels_Sprites_Types.GRASS_3:
+        #     self.image = ImageRegister().GetSprite( Levels_Sprites_Types.GRASS_3 )
+        #     self.rect  = self.image.get_rect( topleft = position )
+        #     self.hitbox = self.rect.inflate( 0, -10 )
 
     # def update( self ):
     #     if IGP.GAME_PARAMETERS["DebugMode"] == True:
