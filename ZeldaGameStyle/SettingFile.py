@@ -10,10 +10,13 @@ In this file we make the definition of all Setting for the game
 GAME_NAME = "Custom Zelda Game"
 
 # Setting for Display
-WINDOW_WIDTH = 1280 ; WINDOW_HEIGHT = 720
+# WINDOW_WIDTH = 1280 ; WINDOW_HEIGHT = 720
+WINDOW_WIDTH = 1920 ; WINDOW_HEIGHT = 1080
 
 # Setting FPS
 FPS = 60
+
+ELAPSED_PLAYER_ATTACK_TIME = 400
 
 # TileSize
 TILESIZE = 64

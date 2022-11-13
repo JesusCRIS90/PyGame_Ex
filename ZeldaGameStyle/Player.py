@@ -4,6 +4,30 @@ from pygame.sprite import Group
 from ImageRegister import *
 import InGame_Parameters as IGP
 
+
+class PyGameTimer():
+
+    def __init__( self, elapsedTime:int ) -> None:
+        self.time_init = None
+        self.elapsedTime = 100
+        self.Set_elapsedTime( elapsedTime )
+
+    def Set_elapsedTime( self, elapsedTime:int ):
+        if elapsedTime > 0:
+            self.elapsedTime = elapsedTime
+        return self
+
+    def Start( self ):
+        self.time_init = pygame.time.get_ticks()
+        pass
+
+    def ElapsedTime_Reach( self ):
+        currentTime = pygame.time.get_ticks()
+        if currentTime - self.time_init >= self.elapsedTime:
+            return True
+        else:
+            return False
+
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, position, groups:Group, enum_sprite, obstacle:Group ) -> None:
@@ -12,8 +36,12 @@ class Player(pygame.sprite.Sprite):
         self.rect = None
         self.hitbox = None
 
+        self.Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
+
         self.direction = pygame.math.Vector2()
         self.speed = 5
+
+        self.attacking = False
 
         self.obstacle_sprites = obstacle
 
@@ -25,6 +53,7 @@ class Player(pygame.sprite.Sprite):
     def input( self ):
         keys = pygame.key.get_pressed()
         
+        "Moving Inputs"
         if keys[ pygame.K_UP ]:
             self.direction.y = -1
         elif keys[ pygame.K_DOWN ]:
@@ -38,7 +67,18 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = -1
         else:
             self.direction.x = 0
-    
+
+        """" Attacking Inputs """
+        if keys[ pygame.K_SPACE ] and not self.attacking:
+            self.attacking = True
+            self.Timer.Start()
+            print("Attack")
+
+        if keys[ pygame.K_LCTRL ] and not self.attacking:
+            self.attacking = True
+            self.Timer.Start()
+            print("Magic")
+
     def move( self, speed ):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
@@ -67,8 +107,15 @@ class Player(pygame.sprite.Sprite):
                     if self.direction.y < 0:        # Moving Up
                         self.hitbox.top = sprite.hitbox.bottom
 
+    def cooldowns( self ):
+        if self.attacking:
+            if self.Timer.ElapsedTime_Reach() == True:
+                self.attacking = False
+
+
     def update( self ):
         self.input()
+        self.cooldowns()
         self.move( self.speed )
 
         # if IGP.GAME_PARAMETERS["DebugMode"] == True:

@@ -11,6 +11,7 @@ import pygame
 import SettingFile as STF
 from typing import overload
 import copy
+from support import import_folder
 
 """ ENUMS FOR IMAGES """
 """"
@@ -50,8 +51,23 @@ class Levels_Sprites_Types( IntEnum ):
 
 @unique
 class Player_Sprites_Types( IntEnum ):
-    PLAYER_TEST   = 100
-
+    PLAYER_TEST             = 100
+    
+    PLAYER_DOWN_ATTACK      = 101
+    PLAYER_UP_ATTACK        = 102
+    PLAYER_LEFT_ATTACK      = 103
+    PLAYER_RIGHT_ATTACK     = 104
+    
+    PLAYER_DOWN_MOVE        = 105
+    PLAYER_UP_MOVE          = 106
+    PLAYER_LEFT_MOVE        = 107
+    PLAYER_RIGHT_MOVE       = 108
+    
+    PLAYER_DOWN_IDLE        = 109
+    PLAYER_UP_IDLE          = 110
+    PLAYER_LEFT_IDLE        = 111
+    PLAYER_RIGHT_IDLE       = 112
+    
 
 Grass_Dict = {
     8   : Levels_Sprites_Types.GRASS_1,
@@ -111,6 +127,22 @@ class ImageRegister( ):
                 
     def _Load_Player_Sprites_( self ):
         self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_TEST: pygame.image.load("Assets/Player/player.png").convert_alpha() } )
+        
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_DOWN_ATTACK: import_folder( "Assets/Player/down_attack/" ) } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_UP_ATTACK: import_folder( "Assets/Player/up_attack/" ) } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_LEFT_ATTACK: import_folder( "Assets/Player/left_attack/" ) } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_RIGHT_ATTACK: import_folder( "Assets/Player/right_attack/" ) } )
+
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_DOWN_MOVE: import_folder( "Assets/Player/down_move/" ) } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_UP_MOVE: import_folder( "Assets/Player/up_move/" ) } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_LEFT_MOVE: import_folder( "Assets/Player/left_move/" ) } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_RIGHT_MOVE: import_folder( "Assets/Player/right_move/" ) } )
+
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_DOWN_IDLE: import_folder( "Assets/Player/down_idle/" ) } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_UP_IDLE: import_folder( "Assets/Player/up_idle/" ) } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_LEFT_IDLE: import_folder( "Assets/Player/left_idle/" ) } )
+        self.Sprite_Dictionary.update( { Player_Sprites_Types.PLAYER_RIGHT_IDLE: import_folder( "Assets/Player/right_idle/" ) } )
+
   
     def _Load_Levels_Sprites_( self ):
         #self.Sprite_Dictionary.update( { Levels_Sprites_Types.ROCK_TEST: pygame.image.load("Assets/rock.png").convert_alpha() } )

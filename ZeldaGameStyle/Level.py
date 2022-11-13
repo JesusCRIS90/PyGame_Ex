@@ -28,14 +28,7 @@ class Level:
         
         for style, layout in layouts.items():
             self.create_layer( style, layout )
-        #     for row_index,row in enumerate( layout ):
-        #         for col_index, col in enumerate( row ):
-        #             if col != '-1':
-        #                 x = col_index * TILESIZE;   y = row_index * TILESIZE
-        #                 if style == 'boundary':
-        #                     Tile( (x, y), [ self.obstacle_sprites], Levels_Sprites_Types.NONE_SPITE )
 
-        # self.player = Player( ( 2000, 1430 ), [ self.visible_sprites ], Player_Sprites_Types.PLAYER_TEST, self.obstacle_sprites )
         
     def create_layer( self, layerName:str, layer:list ):
         for row_index,row in enumerate( layer ):

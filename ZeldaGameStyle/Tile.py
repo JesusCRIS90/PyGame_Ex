@@ -22,7 +22,7 @@ class Tile(pygame.sprite.Sprite):
         else:
             self.image = ImageRegister().GetSprite( enum_sprite )
             self.rect  = self.image.get_rect( topleft = position )
-            self.hitbox = self.rect.inflate( 0, -10 )
+            self.hitbox = self.rect.inflate( -20, -10 )
 
         # if enum_sprite == Levels_Sprites_Types.GRASS_1:
         #     self.image = ImageRegister().GetSprite( Levels_Sprites_Types.GRASS_1 )

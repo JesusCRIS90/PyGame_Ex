@@ -27,7 +27,7 @@ class GAME_STATES( IntEnum ):
 """
 GAME_PARAMETERS = {
     "GameState": GAME_STATES.INIT_SCREEN,
-    "DebugMode": True,
+    "DebugMode": False,
     "CanvasGame": None
 }
 
