@@ -50,7 +50,7 @@ class Level:
         self.visible_sprites.custom_draw( self.player )
         self.visible_sprites.update()
         #debug( self.player.direction )
-        debug( self.player.rect.center )
+        #debug( self.player.rect.center )
 
 
 class YSortCameraGroup( pygame.sprite.Group ):

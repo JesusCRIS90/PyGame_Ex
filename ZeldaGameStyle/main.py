@@ -9,7 +9,6 @@ ZELDA-STYLE GAME USING PYGAME LIBRARY
 
 from CustomZeldaGame import *
 
-from ImageRegister import ImageRegister
 
 if __name__ == '__main__':
     game = ZeldaGame().RunGame()
