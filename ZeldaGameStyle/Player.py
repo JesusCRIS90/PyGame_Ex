@@ -5,22 +5,19 @@ from ImageRegister import *
 import InGame_Parameters as IGP
 from pygame.math import Vector2
 from debug import *
-
 from enum import unique, IntEnum
 
+from Weapon import PlayerWeapon
+from Animations import *
 
-@unique
-class Player_Inputs_Types( IntEnum ):
-    IDLE            = 1001
-    ATTACKING       = 1002
-    MOVING          = 1003
 
-@unique
-class Player_See_Directions( IntEnum ):
-    UP          = 1010
-    DOWN        = 1011
-    LEFT        = 1012
-    RIGHT       = 1013
+WeaponDict = {
+    0   : Weapons_Types.SWORD,
+    1   : Weapons_Types.LANCE,
+    2   : Weapons_Types.SAI,
+    3   : Weapons_Types.RAPIER,
+    4   : Weapons_Types.AXE,
+}
 
 class PyGameTimer():
 
@@ -45,108 +42,6 @@ class PyGameTimer():
         else:
             return False
 
-class Animations():
-    
-    def __init__( self ) -> None:
-        self.direction = Vector2()
-        self.inputType = Player_Inputs_Types.IDLE
-        self.SeeDirection = Player_See_Directions.DOWN
-        
-        self.frame_index = 0
-        self.animation_speed = 0.15
-
-
-    def animate( self, direction:Vector2, inputType:Player_Inputs_Types ):
-        
-        self.setState( direction, inputType )
-        animations_list = self.Get_AnimationList()
-
-        "Loop over animations_list"
-        self.frame_index += self.animation_speed
-        if self.frame_index >= len( animations_list ):
-            self.frame_index = 0
-
-        return animations_list[ int( self.frame_index ) ]
-        
-        
-    def setState( self, direction:Vector2, inputType:Player_Inputs_Types ):
-        self.direction = direction
-        self.inputType = inputType
-        self.UpdateSeeDirection()
-
-    def UpdateSeeDirection( self ):
-        
-        if self.direction.x == 1 and self.direction.y == 0:
-            self.SeeDirection = Player_See_Directions.RIGHT  
-        
-        if self.direction.x == -1 and self.direction.y == 0:
-            self.SeeDirection = Player_See_Directions.LEFT  
-
-        if self.direction.x == 0 and self.direction.y == 1:
-            self.SeeDirection = Player_See_Directions.DOWN  
-
-        if self.direction.x == 0 and self.direction.y == -1:
-            self.SeeDirection = Player_See_Directions.UP  
-
-    def Get_AnimationList( self ):
-        
-        if self.inputType == Player_Inputs_Types.IDLE:
-            
-            if self.SeeDirection == Player_See_Directions.UP:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_UP_IDLE )
-                #return "UP_IDLE"
-            
-            if self.SeeDirection == Player_See_Directions.DOWN:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_DOWN_IDLE )
-                #return "DOWN_IDLE"
-            
-            if self.SeeDirection == Player_See_Directions.LEFT:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_LEFT_IDLE )
-                #return "LEFT_IDLE"
-            
-            if self.SeeDirection == Player_See_Directions.RIGHT:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_RIGHT_IDLE )
-                #return "RIGHT_IDLE"            
-
-
-        if self.inputType == Player_Inputs_Types.ATTACKING:
-            
-            if self.SeeDirection == Player_See_Directions.UP:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_UP_ATTACK )
-                #return "UP_ATTACK"
-            
-            if self.SeeDirection == Player_See_Directions.DOWN:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_DOWN_ATTACK )
-                #return "DOWN_ATTACK"
-            
-            if self.SeeDirection == Player_See_Directions.LEFT:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_LEFT_ATTACK )
-                #return "LEFT_ATTACK"
-            
-            if self.SeeDirection == Player_See_Directions.RIGHT:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_RIGHT_ATTACK )
-                #return "RIGHT_ATTACK"
-
-
-        if self.inputType == Player_Inputs_Types.MOVING:
-            
-            if self.SeeDirection == Player_See_Directions.UP:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_UP_MOVE )
-                #return "UP_MOVE"
-            
-            if self.SeeDirection == Player_See_Directions.DOWN:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_DOWN_MOVE )
-                #return "DOWN_MOVE"
-            
-            if self.SeeDirection == Player_See_Directions.LEFT:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_LEFT_MOVE )
-                #return "LEFT_MOVE"
-            
-            if self.SeeDirection == Player_See_Directions.RIGHT:
-                return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_RIGHT_MOVE )
-                #return "RIGHT_MOVE"
-
-
 
 
 class Player(pygame.sprite.Sprite):
@@ -158,16 +53,21 @@ class Player(pygame.sprite.Sprite):
         self.hitbox = None
 
         self.Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
+        self.Weapon_Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
 
         self.direction = pygame.math.Vector2()
         self.speed = 5
 
         self.attacking = False
+        self.switching_weapon = False
 
         self.obstacle_sprites = obstacle
 
         self.inputType = Player_Inputs_Types.IDLE
         self.animations = Animations()
+        self.weapon = None
+        self.weapon_index = 0
+        self.visible_sprite = groups
 
         if enum_sprite == Player_Sprites_Types.PLAYER_TEST:
             self.image = ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_TEST )
@@ -205,12 +105,24 @@ class Player(pygame.sprite.Sprite):
             self.inputType = Player_Inputs_Types.ATTACKING
             self.Timer.Start()
             print("Attack")
+            self.weapon = PlayerWeapon( self, self.visible_sprite, 
+                self.GetWeaponSprite( self.weapon_index, self.animations.Get_SeeDirection() ) )
 
         if keys[ pygame.K_LCTRL ] and not self.attacking:
             self.attacking = True
             self.inputType = Player_Inputs_Types.ATTACKING
             self.Timer.Start()
             print("Magic")
+
+        if keys[ pygame.K_q ] and not self.switching_weapon:
+            
+            self.weapon_index += 1
+            if self.weapon_index > 4:
+                self.weapon_index = 0
+            
+            self.switching_weapon = True
+            self.Weapon_Timer.Start()
+            print("Switching Weapon")
 
     def move( self, speed ):
         if self.direction.magnitude() != 0:
@@ -222,7 +134,6 @@ class Player(pygame.sprite.Sprite):
         self.collision( 'vertical' )
         self.rect.center = self.hitbox.center
         
-    
     def collision( self, direction ):
         if direction == "horizontal":
             for sprite in self.obstacle_sprites:
@@ -240,10 +151,23 @@ class Player(pygame.sprite.Sprite):
                     if self.direction.y < 0:        # Moving Up
                         self.hitbox.top = sprite.hitbox.bottom
 
+    
+    def destroy_weapon( self ):
+        if self.weapon != None:
+            self.weapon.destroy()
+            self.weapon = None
+                        
     def cooldowns( self ):
+        
         if self.attacking:
             if self.Timer.ElapsedTime_Reach() == True:
                 self.attacking = False
+                self.destroy_weapon()
+        
+        if self.switching_weapon:
+            if self.Weapon_Timer.ElapsedTime_Reach() == True:
+                self.switching_weapon = False
+                
 
     def animate( self ):
         animation = self.animations.animate( self.direction, self.inputType )
@@ -253,6 +177,79 @@ class Player(pygame.sprite.Sprite):
         self.hitbox = self.rect.inflate( 0, -26 )
         # debug( animation )
 
+    def GetWeaponSprite( self, weapon_index, playerSeeDirection:Player_See_Directions ):
+        
+        # DOWN
+        if playerSeeDirection == Player_See_Directions.DOWN:
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.SWORD:
+                return Weapons_Types.SWORD_DOWN
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.AXE:
+                return Weapons_Types.AXE_DOWN
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.LANCE:
+                return Weapons_Types.LANCE_DOWN
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.SAI:
+                return Weapons_Types.SAI_DOWN
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.RAPIER:
+                return Weapons_Types.RAPIER_DOWN
+            
+        # UP   
+        if playerSeeDirection == Player_See_Directions.UP:
+                
+            if WeaponDict[ weapon_index ] == Weapons_Types.SWORD:
+                return Weapons_Types.SWORD_UP
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.AXE:
+                return Weapons_Types.AXE_UP
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.LANCE:
+                return Weapons_Types.LANCE_UP
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.SAI:
+                return Weapons_Types.SAI_UP
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.RAPIER:
+                return Weapons_Types.RAPIER_UP
+        
+        # LEFT  
+        if playerSeeDirection == Player_See_Directions.LEFT:
+                
+            if WeaponDict[ weapon_index ] == Weapons_Types.SWORD:
+                return Weapons_Types.SWORD_LEFT
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.AXE:
+                return Weapons_Types.AXE_LEFT
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.LANCE:
+                return Weapons_Types.LANCE_LEFT
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.SAI:
+                return Weapons_Types.SAI_LEFT
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.RAPIER:
+                return Weapons_Types.RAPIER_LEFT
+        
+        # RIGHT  
+        if playerSeeDirection == Player_See_Directions.RIGHT:
+                
+            if WeaponDict[ weapon_index ] == Weapons_Types.SWORD:
+                return Weapons_Types.SWORD_RIGHT
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.AXE:
+                return Weapons_Types.AXE_RIGHT
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.LANCE:
+                return Weapons_Types.LANCE_RIGHT
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.SAI:
+                return Weapons_Types.SAI_RIGHT
+            
+            if WeaponDict[ weapon_index ] == Weapons_Types.RAPIER:
+                return Weapons_Types.RAPIER_RIGHT
 
 
     def update( self ):
