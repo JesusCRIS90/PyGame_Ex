@@ -17,7 +17,6 @@ class UI_General_Component:
     def update( self ):
         pass
 
-
 class UI_General_Bar( UI_General_Component ):
 
     def __init__(self, info_bar:dict ) -> None:
@@ -75,7 +74,6 @@ class UI_General_Text( UI_General_Component ):
         self.text = self.updating_fun()
         self.display()
 
-
 class UI_General_Box( UI_General_Component ):
 
     def __init__(self, info_box:dict ) -> None:
@@ -110,7 +108,7 @@ class UI_General_Box( UI_General_Component ):
         
         res = self.updating_fun()
 
-        self.index      = res[ "Weapon_Type_Sprite" ]
+        self.index      = res[ "Type_Sprite" ]
         self.switch     = res[ "Switching" ]
         
         self.display()

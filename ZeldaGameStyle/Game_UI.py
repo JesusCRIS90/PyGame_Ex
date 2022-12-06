@@ -91,7 +91,7 @@ def Player_Exp_Update( ):
 
 def Player_Weapon_Update( ):
     
-    res = { "Weapon_Type_Sprite": 0, "Switching": False }
+    res = { "Type_Sprite": 0, "Switching": False }
 
     index = PlayerStats().Get_WeaponIndex()
     if WeaponDict[ index ] == Weapons_Types.SWORD:
