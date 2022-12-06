@@ -38,21 +38,25 @@ MAGENTA     = ( 255, 0, 255 )
 PATH_LEVEL_JSON = "Assets/levels/level_1.json"
 
 
+
+# UI COLORS
+WATER_COLOR             = '#71DDEE'
+UI_BG_COLOR             = '#222222'
+UI_BORDER_COLOR         = '#111111'
+TEXT_COLOR              = '#EEEEEE'
+HEALTH_COLOR            = "red"
+ENERGY_COLOR            = "blue"
+UI_BORDER_COLOR_ACTIVE  = 'gold'
+
+# UI SIZES
+BAR_HEIGHT          = 20
+HEALTH_BAR_WIDTH    = 200
+ENERGY_BAR_WIDTH    = 140
+ITEM_BOX_SIZE       = 80
+
+# PLAYER SETTINGS
+PLAYER_MAX_HEALTH = 100
+
 # Setting Font
-FONT_NAME = "Assets/Facon.ttf"
-FONT_SIZE = 32
-
-# Maximun Number of Player Bullet
-MAX_PLAYER_BULLETS = 2; MAX_ENEMIES_BULLETS = 3
-
-# Speed Enemies and Player
-ENEMIES_SPEED   = 3;  ENEMIES_BULLET_SPEED    = 10
-PLAYER_SPEED    = 6;  PLAYER_BULLET_SPEED     = 12
-
-# Rubies
-MAX_RUBIES_ALLOWED = 3; STANDAR_RUBY_TIME_CREATION = 10000 # Miliseconds
-
-# Zombies
-MAX_ZOMBIES_ALLOWED = 7; STANDAR_ZOMBI_TIME_CREATION = 5000 # Miliseconds
-
-INITIAL_ROUND_TIME = 30
+FONT_NAME = "Assets/Font/joystix.ttf"
+FONT_SIZE = 18

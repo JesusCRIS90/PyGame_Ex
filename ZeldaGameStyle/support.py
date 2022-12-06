@@ -24,7 +24,6 @@ def load_layers_map( path_lvl:str ):
         except:
             return None
 
-
 def dict_layer_map_2_json( jsonFileName:str, layers:dict ):
     with open( jsonFileName + ".json", 'w', encoding='utf-8') as f:
         json.dump( layers , f, ensure_ascii = False, indent = None )
@@ -39,10 +38,40 @@ def import_folder( path ):
 
     return surface_list
 
-# dict_layer_map_2_json( "MapLayers", { 
-#     "boundary": import_csv_layout( boundary_csv_path ),
-#     "grass": import_csv_layout( grass_csv_path ),
-#     "object": import_csv_layout( object_csv_path )
-# } )
 
-# Map_Layers = load_layers_map( "Assets/WorldMap/MapLayers/MapLayers.json" )
+
+def CustomSingleton( cls ):
+
+    instances= dict()
+
+    def wrap( *args, **kwargs ):
+        if cls not in instances:
+            instances[ cls ] = cls( *args, **kwargs )
+
+        return instances[ cls ]
+
+    return wrap
+
+
+class PyGameTimer():
+
+    def __init__( self, elapsedTime:int ) -> None:
+        self.time_init = None
+        self.elapsedTime = 100
+        self.Set_elapsedTime( elapsedTime )
+
+    def Set_elapsedTime( self, elapsedTime:int ):
+        if elapsedTime > 0:
+            self.elapsedTime = elapsedTime
+        return self
+
+    def Start( self ):
+        self.time_init = pygame.time.get_ticks()
+        pass
+
+    def ElapsedTime_Reach( self ):
+        currentTime = pygame.time.get_ticks()
+        if currentTime - self.time_init >= self.elapsedTime:
+            return True
+        else:
+            return False

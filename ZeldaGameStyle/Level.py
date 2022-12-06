@@ -7,6 +7,8 @@ from debug import *
 import InGame_Parameters as IGP
 from support import *
 
+from Game_UI import Game_UI
+
 class Level:
 
     def __init__(self) -> None:
@@ -21,6 +23,9 @@ class Level:
 
         self.create_map()
         self.create_player()
+
+        # User Interface Create
+        self.ui = Game_UI()
 
     def create_map( self ):
         
@@ -49,8 +54,7 @@ class Level:
         #self.visible_sprites.draw( self.display_surface )
         self.visible_sprites.custom_draw( self.player )
         self.visible_sprites.update()
-        #debug( self.player.direction )
-        #debug( self.player.rect.center )
+        self.ui.display()
 
 
 class YSortCameraGroup( pygame.sprite.Group ):

@@ -9,6 +9,7 @@ from enum import unique, IntEnum
 
 from Weapon import PlayerWeapon
 from Animations import *
+from support import PyGameTimer
 
 
 WeaponDict = {
@@ -19,29 +20,49 @@ WeaponDict = {
     4   : Weapons_Types.AXE,
 }
 
-class PyGameTimer():
+@CustomSingleton
+class PlayerStats(  ):
 
-    def __init__( self, elapsedTime:int ) -> None:
-        self.time_init = None
-        self.elapsedTime = 100
-        self.Set_elapsedTime( elapsedTime )
+    def __init__(self) -> None:
+        self.stats = { 
+            "health": 100, 
+            "energy": 100, 
+            "attack": 10, 
+            "magic": 4, 
+            "speed": 6,
+            "exp": 123,
+            "weapon_index": 0,
+            "magic_index": 0,
+            "Switching_Weapon": False,
+            "Switching_Magic": False
+            }
+    
+    def Get_Stats( self ):
+        return self.stats
+    
+    def Get_Health( self ):
+        return self.stats[ "health" ]
 
-    def Set_elapsedTime( self, elapsedTime:int ):
-        if elapsedTime > 0:
-            self.elapsedTime = elapsedTime
-        return self
-
-    def Start( self ):
-        self.time_init = pygame.time.get_ticks()
-        pass
-
-    def ElapsedTime_Reach( self ):
-        currentTime = pygame.time.get_ticks()
-        if currentTime - self.time_init >= self.elapsedTime:
-            return True
-        else:
-            return False
-
+    def Get_Energy( self ):
+        return self.stats[ "energy" ]
+    
+    def Get_Exp( self ):
+        return self.stats[ "exp" ]
+    
+    def Get_WeaponIndex( self ):
+        return self.stats[ "weapon_index" ]
+    
+    def Set_WeaponIndex( self, index ):
+        self.stats[ "weapon_index" ] = index
+    
+    def Get_SwitchingWeapon( self ):
+        return self.stats[ "Switching_Weapon" ]
+    
+    def Set_SwitchingWeapon( self, val:bool ):
+        self.stats[ "Switching_Weapon" ] = val
+    
+    def Get_MagicIndex( self ):
+        return self.stats[ "magic_index" ]
 
 
 class Player(pygame.sprite.Sprite):
@@ -119,7 +140,7 @@ class Player(pygame.sprite.Sprite):
             self.weapon_index += 1
             if self.weapon_index > 4:
                 self.weapon_index = 0
-            
+
             self.switching_weapon = True
             self.Weapon_Timer.Start()
             print("Switching Weapon")
@@ -251,12 +272,16 @@ class Player(pygame.sprite.Sprite):
             if WeaponDict[ weapon_index ] == Weapons_Types.RAPIER:
                 return Weapons_Types.RAPIER_RIGHT
 
+    def Update_Player_Stats( self ):
+        PlayerStats().Set_WeaponIndex( self.weapon_index )
+        PlayerStats().Set_SwitchingWeapon( self.switching_weapon )
 
     def update( self ):
         self.input()
         self.cooldowns()
         self.animate()
         self.move( self.speed )
+        self.Update_Player_Stats()
 
         # if IGP.GAME_PARAMETERS["DebugMode"] == True:
         #     pygame.draw.rect( pygame.display.get_surface(), STF.GREEN, self.rect, 1)

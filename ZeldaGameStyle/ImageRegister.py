@@ -12,6 +12,7 @@ import SettingFile as STF
 from typing import overload
 import copy
 from support import import_folder
+from support import CustomSingleton
 
 """ ENUMS FOR IMAGES """
 """"
@@ -137,17 +138,6 @@ Object_Dict = {
 }
 
 
-def CustomSingleton( cls ):
-
-    instances= dict()
-
-    def wrap( *args, **kwargs ):
-        if cls not in instances:
-            instances[ cls ] = cls( *args, **kwargs )
-
-        return instances[ cls ]
-
-    return wrap
 
 @CustomSingleton
 class ImageRegister( ):
