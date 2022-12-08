@@ -20,6 +20,11 @@ WeaponDict = {
     4   : Weapons_Types.AXE,
 }
 
+MagicDict = {
+    0   : Magic_Types.FLAME,
+    1   : Magic_Types.HEAL
+}
+
 @CustomSingleton
 class PlayerStats(  ):
 
@@ -63,6 +68,15 @@ class PlayerStats(  ):
     
     def Get_MagicIndex( self ):
         return self.stats[ "magic_index" ]
+    
+    def Set_MagicIndex( self, index ):
+        self.stats[ "magic_index" ] = index
+    
+    def Get_SwitchingMagic( self ):
+        return self.stats[ "Switching_Magic" ]
+    
+    def Set_SwitchingMagic( self, val:bool ):
+        self.stats[ "Switching_Magic" ] = val
 
 
 class Player(pygame.sprite.Sprite):
@@ -75,19 +89,26 @@ class Player(pygame.sprite.Sprite):
 
         self.Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
         self.Weapon_Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
+        self.Magic_Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
 
         self.direction = pygame.math.Vector2()
         self.speed = 5
 
         self.attacking = False
+        
         self.switching_weapon = False
+        self.weapon = None
+        self.weapon_index = 0
+
+        self.switching_magic = False
+        self.magic = None
+        self.magic_index = 0
 
         self.obstacle_sprites = obstacle
 
         self.inputType = Player_Inputs_Types.IDLE
         self.animations = Animations()
-        self.weapon = None
-        self.weapon_index = 0
+
         self.visible_sprite = groups
 
         if enum_sprite == Player_Sprites_Types.PLAYER_TEST:
@@ -121,20 +142,23 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = 0
 
         """" Attacking Inputs """
+        
+        """ Weapon Attack """
         if keys[ pygame.K_SPACE ] and not self.attacking:
             self.attacking = True
             self.inputType = Player_Inputs_Types.ATTACKING
             self.Timer.Start()
-            print("Attack")
             self.weapon = PlayerWeapon( self, self.visible_sprite, 
                 self.GetWeaponSprite( self.weapon_index, self.animations.Get_SeeDirection() ) )
 
+        """ Magic Attack - UDER DEVELOPMENT """
         if keys[ pygame.K_LCTRL ] and not self.attacking:
             self.attacking = True
             self.inputType = Player_Inputs_Types.ATTACKING
             self.Timer.Start()
             print("Magic")
 
+        """ Switching Weapon """
         if keys[ pygame.K_q ] and not self.switching_weapon:
             
             self.weapon_index += 1
@@ -144,6 +168,18 @@ class Player(pygame.sprite.Sprite):
             self.switching_weapon = True
             self.Weapon_Timer.Start()
             print("Switching Weapon")
+
+        
+        """ Switching Weapon """
+        if keys[ pygame.K_e ] and not self.switching_magic:
+            
+            self.magic_index += 1
+            if self.magic_index > 1:
+                self.magic_index = 0
+
+            self.switching_magic = True
+            self.Magic_Timer.Start()
+            print("Switching Magic")
 
     def move( self, speed ):
         if self.direction.magnitude() != 0:
@@ -188,6 +224,10 @@ class Player(pygame.sprite.Sprite):
         if self.switching_weapon:
             if self.Weapon_Timer.ElapsedTime_Reach() == True:
                 self.switching_weapon = False
+        
+        if self.switching_magic:
+            if self.Magic_Timer.ElapsedTime_Reach() == True:
+                self.switching_magic = False
                 
 
     def animate( self ):
@@ -275,6 +315,8 @@ class Player(pygame.sprite.Sprite):
     def Update_Player_Stats( self ):
         PlayerStats().Set_WeaponIndex( self.weapon_index )
         PlayerStats().Set_SwitchingWeapon( self.switching_weapon )
+        PlayerStats().Set_MagicIndex( self.magic_index )
+        PlayerStats().Set_SwitchingMagic( self.switching_magic )
 
     def update( self ):
         self.input()

@@ -106,6 +106,10 @@ class Weapons_Types( IntEnum ):
     SAI                   = 253
     SWORD                 = 254
 
+@unique
+class Magic_Types( IntEnum ):
+    FLAME       = 300
+    HEAL        = 301
 
 Grass_Dict = {
     8   : Levels_Sprites_Types.GRASS_1,
@@ -150,6 +154,7 @@ class ImageRegister( ):
         self._Load_Levels_Sprites_()
         self._Load_Player_Sprites_()
         self._Load_Weapons_Sprites_()
+        self._Load_Magic_Sprites_()
 
                 
     def _Load_Player_Sprites_( self ):
@@ -236,6 +241,9 @@ class ImageRegister( ):
         self.Sprite_Dictionary.update( { Weapons_Types.SWORD_RIGHT:   pygame.image.load("Assets/Weapons/sword/right.png").convert_alpha() } )    
         self.Sprite_Dictionary.update( { Weapons_Types.SWORD_FULL:    pygame.image.load("Assets/Weapons/sword/full.png").convert_alpha() } )
 
+    def _Load_Magic_Sprites_( self ):
+        self.Sprite_Dictionary.update( { Magic_Types.FLAME:   pygame.image.load("Assets/Particles/flame/fire.png").convert_alpha() } )
+        self.Sprite_Dictionary.update( { Magic_Types.HEAL:    pygame.image.load("Assets/Particles/heal/heal.png").convert_alpha() } )
         
     @overload
     def GetSprite( self, enum_sprite:Levels_Sprites_Types ):

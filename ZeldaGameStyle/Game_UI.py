@@ -2,16 +2,16 @@ import pygame
 from SettingFile import *
 from UI_Components import *
 from Player import PlayerStats
-from Player import WeaponDict
+from Player import WeaponDict, MagicDict
 from ImageRegister import *
 
+# TO-DO: Update Magic_Box Component
 
 class Game_UI:
 
     def __init__(self) -> None:
         
-        self.UI_Components_dict = {}
-
+        self.UI_Components_list = []
         self.display_surface = pygame.display.get_surface()
         
         # Creating UI Components
@@ -54,27 +54,25 @@ class Game_UI:
         } )
 
         self.magic = UI_General_Box( {
-            "X_pos": ITEM_BOX_SIZE - 10, 
-            "Y_pos": int( self.display_surface.get_size()[ 1 ] - ( ITEM_BOX_SIZE + 5 ) ),
+            "X_pos": ITEM_BOX_SIZE + 0, 
+            "Y_pos": int( self.display_surface.get_size()[ 1 ] - ( ITEM_BOX_SIZE + 35 ) ),
             "Width": ITEM_BOX_SIZE,
-            "Height": ITEM_BOX_SIZE,
+            "Height": ITEM_BOX_SIZE + 20,
             "BG_Color": UI_BG_COLOR,
             "Update_Func": Player_Magic_Update
         } )
         
-        # Saving UI Components into Dictionary
-        self.UI_Components_dict[ "Health_Bar" ] = self.health_bar
-        self.UI_Components_dict[ "Energy_Bar" ] = self.energy_bar
-        self.UI_Components_dict[ "Exp_Text" ] = self.exp_text
-        # self.UI_Components_dict[ "Magic_Box" ] = self.magic
-        self.UI_Components_dict[ "Weapon_Box" ] = self.weapon
-        
-
+        # Saving UI Components into List
+        self.UI_Components_list.append( { "UI_Component_Name": "Health_Bar",    "Component": self.health_bar } )
+        self.UI_Components_list.append( { "UI_Component_Name": "Energy_Bar",    "Component": self.energy_bar } )
+        self.UI_Components_list.append( { "UI_Component_Name": "Exp_Text",      "Component": self.exp_text } )
+        self.UI_Components_list.append( { "UI_Component_Name": "Weapon_Box",    "Component": self.weapon } )
+        self.UI_Components_list.append( { "UI_Component_Name": "Magic_Box",     "Component": self.magic } )
 
     def display( self ):
         
-        for ui_comp in self.UI_Components_dict.values():
-            ui_comp.update()
+        for ui_comp in self.UI_Components_list:
+            ui_comp[ "Component" ].update()
 
 
 
@@ -95,26 +93,35 @@ def Player_Weapon_Update( ):
 
     index = PlayerStats().Get_WeaponIndex()
     if WeaponDict[ index ] == Weapons_Types.SWORD:
-        res[ "Weapon_Type_Sprite" ] = Weapons_Types.SWORD_FULL
+        res[ "Type_Sprite" ] = Weapons_Types.SWORD_FULL
     
     elif WeaponDict[ index ] == Weapons_Types.AXE:
-        res[ "Weapon_Type_Sprite" ] = Weapons_Types.AXE_FULL
+        res[ "Type_Sprite" ] = Weapons_Types.AXE_FULL
 
     elif WeaponDict[ index ] == Weapons_Types.LANCE:
-        res[ "Weapon_Type_Sprite" ] = Weapons_Types.LANCE_FULL
+        res[ "Type_Sprite" ] = Weapons_Types.LANCE_FULL
 
     elif WeaponDict[ index ] == Weapons_Types.SAI:
-        res[ "Weapon_Type_Sprite" ] = Weapons_Types.SAI_FULL
+        res[ "Type_Sprite" ] = Weapons_Types.SAI_FULL
     
     elif WeaponDict[ index ] == Weapons_Types.RAPIER:
-        res[ "Weapon_Type_Sprite" ] = Weapons_Types.RAPIER_FULL
+        res[ "Type_Sprite" ] = Weapons_Types.RAPIER_FULL
 
     res[ "Switching" ] = PlayerStats().Get_SwitchingWeapon()
 
     return res
 
-
 def Player_Magic_Update( ):
-    return PlayerStats().Get_MagicIndex()
+    
+    res = { "Type_Sprite": 0, "Switching": False }
+
+    index = PlayerStats().Get_MagicIndex()
+    if MagicDict[ index ] == Magic_Types.FLAME:
+        res[ "Type_Sprite" ] = Magic_Types.FLAME
+    else:
+        res[ "Type_Sprite" ] = Magic_Types.HEAL
+
+    res[ "Switching" ] = PlayerStats().Get_SwitchingMagic()
+    return res
     
     
