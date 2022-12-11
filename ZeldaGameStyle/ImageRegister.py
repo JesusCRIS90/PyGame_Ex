@@ -111,6 +111,35 @@ class Magic_Types( IntEnum ):
     FLAME       = 300
     HEAL        = 301
 
+
+@unique
+class Enemy_Types( IntEnum ):
+    BAMBOO      = 400
+    RACCOON     = 401
+    SPIRIT      = 402
+    SQUID       = 403
+
+@unique
+class Enemy_Sprites( IntEnum ):
+
+    BAMBOO_ATTACK   = 410
+    BAMBOO_MOVE     = 411
+    BAMBOO_IDLE     = 412
+
+    RACCOON_ATTACK  = 413
+    RACCOON_MOVE    = 414
+    RACCOON_IDLE    = 415
+
+    SPIRIT_ATTACK   = 416
+    SPIRIT_MOVE     = 417
+    SPIRIT_IDLE     = 418
+
+    SQUID_ATTACK    = 419
+    SQUID_MOVE      = 420
+    SQUID_IDLE      = 421
+
+
+
 Grass_Dict = {
     8   : Levels_Sprites_Types.GRASS_1,
     9   : Levels_Sprites_Types.GRASS_2,
@@ -141,7 +170,12 @@ Object_Dict = {
     20  : Levels_Sprites_Types.OBJECT_21,
 }
 
-
+Enemy_Dict = {
+    "squid"     : Enemy_Types.SQUID,
+    "raccoon"   : Enemy_Types.RACCOON,
+    "spirit"    : Enemy_Types.SPIRIT,
+    "bamboo"    : Enemy_Types.BAMBOO
+}
 
 @CustomSingleton
 class ImageRegister( ):
@@ -155,6 +189,7 @@ class ImageRegister( ):
         self._Load_Player_Sprites_()
         self._Load_Weapons_Sprites_()
         self._Load_Magic_Sprites_()
+        self._Load_Enemies_Sprites_()
 
                 
     def _Load_Player_Sprites_( self ):
@@ -244,6 +279,24 @@ class ImageRegister( ):
     def _Load_Magic_Sprites_( self ):
         self.Sprite_Dictionary.update( { Magic_Types.FLAME:   pygame.image.load("Assets/Particles/flame/fire.png").convert_alpha() } )
         self.Sprite_Dictionary.update( { Magic_Types.HEAL:    pygame.image.load("Assets/Particles/heal/heal.png").convert_alpha() } )
+
+    def _Load_Enemies_Sprites_( self ):
+        
+        self.Sprite_Dictionary.update( { Enemy_Sprites.BAMBOO_ATTACK:   import_folder( "Assets/Monsters/bamboo/attack" ) } )
+        self.Sprite_Dictionary.update( { Enemy_Sprites.BAMBOO_MOVE:     import_folder( "Assets/Monsters/bamboo/move" ) } )
+        self.Sprite_Dictionary.update( { Enemy_Sprites.BAMBOO_IDLE:     import_folder( "Assets/Monsters/bamboo/idle" ) } )
+
+        self.Sprite_Dictionary.update( { Enemy_Sprites.RACCOON_ATTACK:   import_folder( "Assets/Monsters/raccoon/attack" ) } )
+        self.Sprite_Dictionary.update( { Enemy_Sprites.RACCOON_MOVE:     import_folder( "Assets/Monsters/raccoon/move" ) } )
+        self.Sprite_Dictionary.update( { Enemy_Sprites.RACCOON_IDLE:     import_folder( "Assets/Monsters/raccoon/idle" ) } )
+
+        self.Sprite_Dictionary.update( { Enemy_Sprites.SPIRIT_ATTACK:   import_folder( "Assets/Monsters/spirit/attack" ) } )
+        self.Sprite_Dictionary.update( { Enemy_Sprites.SPIRIT_MOVE:     import_folder( "Assets/Monsters/spirit/move" ) } )
+        self.Sprite_Dictionary.update( { Enemy_Sprites.SPIRIT_IDLE:     import_folder( "Assets/Monsters/spirit/idle" ) } )
+
+        self.Sprite_Dictionary.update( { Enemy_Sprites.SQUID_ATTACK:   import_folder( "Assets/Monsters/squid/attack" ) } )
+        self.Sprite_Dictionary.update( { Enemy_Sprites.SQUID_MOVE:     import_folder( "Assets/Monsters/squid/move" ) } )
+        self.Sprite_Dictionary.update( { Enemy_Sprites.SQUID_IDLE:     import_folder( "Assets/Monsters/squid/idle" ) } )
         
     @overload
     def GetSprite( self, enum_sprite:Levels_Sprites_Types ):
@@ -255,6 +308,10 @@ class ImageRegister( ):
     
     @overload
     def GetSprite( self, enum_sprite:Weapons_Types ):
+        return self.Sprite_Dictionary[ enum_sprite ]
+    
+    @overload
+    def GetSprite( self, enum_sprite:Enemy_Sprites ):
         return self.Sprite_Dictionary[ enum_sprite ]
     
     def GetSprite( self, enum_sprite ):

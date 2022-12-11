@@ -21,6 +21,7 @@ class Game_UI:
             "Height": BAR_HEIGHT,
             "BG_Color": UI_BG_COLOR,
             "Front_Color": HEALTH_COLOR,
+            "Maximun_Value": PLAYER_MAX_HEALTH,
             "Update_Func": Player_Bar_Health_Update
         } )
 
@@ -30,6 +31,7 @@ class Game_UI:
             "Height": BAR_HEIGHT,
             "BG_Color": UI_BG_COLOR,
             "Front_Color": ENERGY_COLOR,
+            "Maximun_Value": PLAYER_MAX_ENERGY,
             "Update_Func": Player_Bar_Energy_Update
         } )
 

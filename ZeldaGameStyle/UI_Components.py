@@ -24,7 +24,7 @@ class UI_General_Bar( UI_General_Component ):
 
 
         self.info_bar = info_bar
-        self.current_bar_size = 100  # Percentage
+        self.current_bar_size = info_bar["Maximun_Value"]
         self.updating_state_bar = info_bar[ "Update_Func" ]
 
          # bar setup
@@ -45,7 +45,8 @@ class UI_General_Bar( UI_General_Component ):
     def update(self):
         
         self.current_bar_size = self.updating_state_bar( )
-        self.FRONT_bar_rect.width = int( ( self.current_bar_size / 100 ) * self.info_bar[ "Width" ] )
+        # self.FRONT_bar_rect.width = int( ( self.current_bar_size / 100 ) * self.info_bar[ "Width" ] )
+        self.FRONT_bar_rect.width = int( ( float( self.current_bar_size / self.info_bar["Maximun_Value"] ) ) * float( self.info_bar[ "Width" ] ) )
 
         self.display()
 

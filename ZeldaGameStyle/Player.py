@@ -30,8 +30,8 @@ class PlayerStats(  ):
 
     def __init__(self) -> None:
         self.stats = { 
-            "health": 100, 
-            "energy": 100, 
+            "health": STF.PLAYER_MAX_HEALTH, 
+            "energy": STF.PLAYER_MAX_ENERGY, 
             "attack": 10, 
             "magic": 4, 
             "speed": 6,
