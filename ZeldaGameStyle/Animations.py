@@ -5,7 +5,7 @@ from pygame.math import Vector2
 from enum import unique, IntEnum
 
 @unique
-class Player_Inputs_Types( IntEnum ):
+class Entity_States( IntEnum ):
     IDLE            = 1001
     ATTACKING       = 1002
     MOVING          = 1003
@@ -21,13 +21,13 @@ class Animations():
     
     def __init__( self ) -> None:
         self.direction = Vector2()
-        self.inputType = Player_Inputs_Types.IDLE
+        self.inputType = Entity_States.IDLE
         self.SeeDirection = Player_See_Directions.DOWN
         
         self.frame_index = 0
         self.animation_speed = 0.15
 
-    def animate( self, direction:Vector2, inputType:Player_Inputs_Types ):
+    def animate( self, direction:Vector2, inputType:Entity_States ):
         
         self.setState( direction, inputType )
         animations_list = self.Get_AnimationList()
@@ -39,7 +39,7 @@ class Animations():
 
         return animations_list[ int( self.frame_index ) ]
         
-    def setState( self, direction:Vector2, inputType:Player_Inputs_Types ):
+    def setState( self, direction:Vector2, inputType:Entity_States ):
         self.direction = direction
         self.inputType = inputType
         self.UpdateSeeDirection()
@@ -61,7 +61,7 @@ class Animations():
     def Get_AnimationList( self ):
 
         
-        if self.inputType == Player_Inputs_Types.IDLE:
+        if self.inputType == Entity_States.IDLE:
             
             if self.SeeDirection == Player_See_Directions.UP:
                 return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_UP_IDLE )
@@ -75,7 +75,7 @@ class Animations():
             if self.SeeDirection == Player_See_Directions.RIGHT:
                 return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_RIGHT_IDLE )        
 
-        if self.inputType == Player_Inputs_Types.ATTACKING:
+        if self.inputType == Entity_States.ATTACKING:
             
             if self.SeeDirection == Player_See_Directions.UP:
                 return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_UP_ATTACK )
@@ -89,7 +89,7 @@ class Animations():
             if self.SeeDirection == Player_See_Directions.RIGHT:
                 return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_RIGHT_ATTACK )
 
-        if self.inputType == Player_Inputs_Types.MOVING:
+        if self.inputType == Entity_States.MOVING:
             
             if self.SeeDirection == Player_See_Directions.UP:
                 return ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_UP_MOVE )

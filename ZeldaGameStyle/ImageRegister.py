@@ -318,5 +318,4 @@ class ImageRegister( ):
         return self.Sprite_Dictionary[ enum_sprite ]
 
 
-    
 

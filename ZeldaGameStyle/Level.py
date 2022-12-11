@@ -2,6 +2,7 @@ import pygame
 from SettingFile import *
 from Tile import Tile
 from Player import Player
+from Enemy import Enemy
 from ImageRegister import *
 from debug import *
 import InGame_Parameters as IGP
@@ -22,7 +23,7 @@ class Level:
         self.player = None
 
         self.create_map()
-        self.create_player()
+        # self.create_player()
 
         # User Interface Create
         self.ui = Game_UI()
@@ -46,9 +47,21 @@ class Level:
                             Tile( (x, y), [ self.obstacle_sprites, self.visible_sprites], Grass_Dict[ int( col ) ] )
                         if layerName == 'object':
                             Tile( ( x, y - TILESIZE ), [ self.obstacle_sprites, self.visible_sprites], Object_Dict[ int( col ) ] )
+                        if layerName == 'entities':
+                            if col == '394':
+                                self.create_player( ( x, y ) )
+                            else:
+                                Enemy( ( x, y ), self.Get_Monster_Type_Name( col ), [ self.visible_sprites] )
     
-    def create_player( self ):
-        self.player = Player( ( 2000, 1430 ), [ self.visible_sprites ], Player_Sprites_Types.PLAYER_TEST, self.obstacle_sprites )
+    def create_player( self, pos ):
+        self.player = Player( pos, [ self.visible_sprites ], Player_Sprites_Types.PLAYER_TEST, self.obstacle_sprites )
+
+    def Get_Monster_Type_Name( self, col_pos ):
+        if col_pos      == "390":  return "bamboo"
+        elif col_pos    == "391":  return "spirit"
+        elif col_pos    == "392":  return "raccoon"
+        else:                      return "squid"
+
 
     def run( self ):
         #self.visible_sprites.draw( self.display_surface )

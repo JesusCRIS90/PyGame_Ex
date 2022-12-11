@@ -10,6 +10,7 @@ from enum import unique, IntEnum
 from Weapon import PlayerWeapon
 from Animations import *
 from support import PyGameTimer
+from Entity import Entity
 
 
 WeaponDict = {
@@ -79,19 +80,19 @@ class PlayerStats(  ):
         self.stats[ "Switching_Magic" ] = val
 
 
-class Player(pygame.sprite.Sprite):
+class Player( Entity ):
 
     def __init__(self, position, groups:Group, enum_sprite, obstacle:Group ) -> None:
         super().__init__( groups )
-        self.image = None
-        self.rect = None
-        self.hitbox = None
+        # self.image = None
+        # self.rect = None
+        # self.hitbox = None
 
         self.Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
         self.Weapon_Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
         self.Magic_Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
 
-        self.direction = pygame.math.Vector2()
+        # self.direction = pygame.math.Vector2()
         self.speed = 5
 
         self.attacking = False
@@ -106,7 +107,7 @@ class Player(pygame.sprite.Sprite):
 
         self.obstacle_sprites = obstacle
 
-        self.inputType = Player_Inputs_Types.IDLE
+        self.inputType = Entity_States.IDLE
         self.animations = Animations()
 
         self.visible_sprite = groups
@@ -118,26 +119,26 @@ class Player(pygame.sprite.Sprite):
 
     def input( self ):
         
-        self.inputType = Player_Inputs_Types.IDLE
+        self.inputType = Entity_States.IDLE
         keys = pygame.key.get_pressed()
         
         if self.attacking:
-            self.inputType = Player_Inputs_Types.ATTACKING
+            self.inputType = Entity_States.ATTACKING
             self.direction.y = 0; self.direction.x = 0
             return
 
         "Moving Inputs"
         if keys[ pygame.K_UP ]:
-            self.direction.y = -1;  self.inputType = Player_Inputs_Types.MOVING
+            self.direction.y = -1;  self.inputType = Entity_States.MOVING
         elif keys[ pygame.K_DOWN ]:
-            self.direction.y = 1;   self.inputType = Player_Inputs_Types.MOVING
+            self.direction.y = 1;   self.inputType = Entity_States.MOVING
         else:
             self.direction.y = 0
 
         if keys[ pygame.K_RIGHT ]:
-            self.direction.x = 1;   self.inputType = Player_Inputs_Types.MOVING
+            self.direction.x = 1;   self.inputType = Entity_States.MOVING
         elif keys[ pygame.K_LEFT ]:
-            self.direction.x = -1;  self.inputType = Player_Inputs_Types.MOVING
+            self.direction.x = -1;  self.inputType = Entity_States.MOVING
         else:
             self.direction.x = 0
 
@@ -146,7 +147,7 @@ class Player(pygame.sprite.Sprite):
         """ Weapon Attack """
         if keys[ pygame.K_SPACE ] and not self.attacking:
             self.attacking = True
-            self.inputType = Player_Inputs_Types.ATTACKING
+            self.inputType = Entity_States.ATTACKING
             self.Timer.Start()
             self.weapon = PlayerWeapon( self, self.visible_sprite, 
                 self.GetWeaponSprite( self.weapon_index, self.animations.Get_SeeDirection() ) )
@@ -154,7 +155,7 @@ class Player(pygame.sprite.Sprite):
         """ Magic Attack - UDER DEVELOPMENT """
         if keys[ pygame.K_LCTRL ] and not self.attacking:
             self.attacking = True
-            self.inputType = Player_Inputs_Types.ATTACKING
+            self.inputType = Entity_States.ATTACKING
             self.Timer.Start()
             print("Magic")
 
@@ -180,34 +181,6 @@ class Player(pygame.sprite.Sprite):
             self.switching_magic = True
             self.Magic_Timer.Start()
             print("Switching Magic")
-
-    def move( self, speed ):
-        if self.direction.magnitude() != 0:
-            self.direction = self.direction.normalize()
-        
-        self.hitbox.x += self.direction.x * speed
-        self.collision( 'horizontal' )
-        self.hitbox.y += self.direction.y * speed
-        self.collision( 'vertical' )
-        self.rect.center = self.hitbox.center
-        
-    def collision( self, direction ):
-        if direction == "horizontal":
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect( self.hitbox ):
-                    if self.direction.x > 0:        # Moving Right
-                        self.hitbox.right = sprite.hitbox.left
-                    if self.direction.x < 0:        # Moving Left
-                        self.hitbox.left = sprite.hitbox.right
-
-        if direction == "vertical":
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect( self.hitbox ):
-                    if self.direction.y > 0:        # Moving Down
-                        self.hitbox.bottom = sprite.hitbox.top
-                    if self.direction.y < 0:        # Moving Up
-                        self.hitbox.top = sprite.hitbox.bottom
-
     
     def destroy_weapon( self ):
         if self.weapon != None:
@@ -229,14 +202,11 @@ class Player(pygame.sprite.Sprite):
             if self.Magic_Timer.ElapsedTime_Reach() == True:
                 self.switching_magic = False
                 
-
     def animate( self ):
         animation = self.animations.animate( self.direction, self.inputType )
-        # print( animation )
         self.image = animation
         self.rect  = self.image.get_rect( center = self.hitbox.center )
         self.hitbox = self.rect.inflate( 0, -26 )
-        # debug( animation )
 
     def GetWeaponSprite( self, weapon_index, playerSeeDirection:Player_See_Directions ):
         
