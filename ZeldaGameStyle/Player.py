@@ -40,7 +40,8 @@ class PlayerStats(  ):
             "weapon_index": 0,
             "magic_index": 0,
             "Switching_Weapon": False,
-            "Switching_Magic": False
+            "Switching_Magic": False,
+            "Player_Position": ( 0, 0 )
             }
     
     def Get_Stats( self ):
@@ -78,6 +79,12 @@ class PlayerStats(  ):
     
     def Set_SwitchingMagic( self, val:bool ):
         self.stats[ "Switching_Magic" ] = val
+    
+    def GetPlayerPosition( self ):
+        return self.stats[ "Player_Position" ]
+    
+    def SetPlayerPosition( self, position ):
+        self.stats[ "Player_Position" ] = position
 
 
 class Player( Entity ):
@@ -108,7 +115,7 @@ class Player( Entity ):
         self.obstacle_sprites = obstacle
 
         self.inputType = Entity_States.IDLE
-        self.animations = Animations()
+        self.animations = PlayerAnimations()
 
         self.visible_sprite = groups
 
@@ -287,6 +294,7 @@ class Player( Entity ):
         PlayerStats().Set_SwitchingWeapon( self.switching_weapon )
         PlayerStats().Set_MagicIndex( self.magic_index )
         PlayerStats().Set_SwitchingMagic( self.switching_magic )
+        PlayerStats().SetPlayerPosition( self.rect.center )
 
     def update( self ):
         self.input()

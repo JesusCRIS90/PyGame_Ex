@@ -3,6 +3,7 @@ import pygame
 from ImageRegister import *
 from pygame.math import Vector2
 from enum import unique, IntEnum
+from SettingFile import *
 
 @unique
 class Entity_States( IntEnum ):
@@ -17,15 +18,23 @@ class Player_See_Directions( IntEnum ):
     LEFT        = 1012
     RIGHT       = 1013
 
+
 class Animations():
     
     def __init__( self ) -> None:
-        self.direction = Vector2()
         self.inputType = Entity_States.IDLE
-        self.SeeDirection = Player_See_Directions.DOWN
-        
         self.frame_index = 0
         self.animation_speed = 0.15
+    
+    def animate( self ):
+        pass
+
+class PlayerAnimations( Animations ):
+    
+    def __init__( self ) -> None:
+        super().__init__()
+        self.direction = Vector2()
+        self.SeeDirection = Player_See_Directions.DOWN
 
     def animate( self, direction:Vector2, inputType:Entity_States ):
         
@@ -60,7 +69,6 @@ class Animations():
 
     def Get_AnimationList( self ):
 
-        
         if self.inputType == Entity_States.IDLE:
             
             if self.SeeDirection == Player_See_Directions.UP:
@@ -105,3 +113,76 @@ class Animations():
 
     def Get_SeeDirection( self ):
         return self.SeeDirection
+
+
+class EnemyAnimations( Animations ):
+    def __init__(self):
+        super().__init__()
+        self.enemy_type = None
+    
+    def animate(self, inputType:Entity_States, enemy_type:Enemy_Types ):
+        self.setState( inputType, enemy_type )
+        animations_list = self.Get_AnimationList()
+
+        "Loop over animations_list"
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len( animations_list ):
+            self.frame_index = 0
+
+        return animations_list[ int( self.frame_index ) ]
+
+
+
+    def Get_AnimationList( self ):
+        return ImageRegister().GetSprite( 
+            Translate2EnemySprite( self.enemy_type, self.inputType ) )
+    
+    def setState( self, inputType:Entity_States, enemy_type:Enemy_Types ):
+        self.inputType = inputType
+        self.enemy_type = enemy_type
+
+
+
+def Translate2EnemySprite(enemy_type: Enemy_Types, state: Entity_States):
+
+    if state == Entity_States.IDLE:
+
+        if enemy_type == Enemy_Types.BAMBOO:
+            return Enemy_Sprites.BAMBOO_IDLE
+
+        if enemy_type == Enemy_Types.RACCOON:
+            return Enemy_Sprites.RACCOON_IDLE
+
+        if enemy_type == Enemy_Types.SPIRIT:
+            return Enemy_Sprites.SPIRIT_IDLE
+
+        if enemy_type == Enemy_Types.SQUID:
+            return Enemy_Sprites.SQUID_IDLE
+
+    if state == Entity_States.ATTACKING:
+
+        if enemy_type == Enemy_Types.BAMBOO:
+            return Enemy_Sprites.BAMBOO_ATTACK
+
+        if enemy_type == Enemy_Types.RACCOON:
+            return Enemy_Sprites.RACCOON_ATTACK
+
+        if enemy_type == Enemy_Types.SPIRIT:
+            return Enemy_Sprites.SPIRIT_ATTACK
+
+        if enemy_type == Enemy_Types.SQUID:
+            return Enemy_Sprites.SQUID_ATTACK
+
+    if state == Entity_States.MOVING:
+
+        if enemy_type == Enemy_Types.BAMBOO:
+            return Enemy_Sprites.BAMBOO_MOVE
+
+        if enemy_type == Enemy_Types.RACCOON:
+            return Enemy_Sprites.RACCOON_MOVE
+
+        if enemy_type == Enemy_Types.SPIRIT:
+            return Enemy_Sprites.SPIRIT_MOVE
+
+        if enemy_type == Enemy_Types.SQUID:
+            return Enemy_Sprites.SQUID_MOVE

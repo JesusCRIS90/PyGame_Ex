@@ -51,7 +51,8 @@ class Level:
                             if col == '394':
                                 self.create_player( ( x, y ) )
                             else:
-                                Enemy( ( x, y ), self.Get_Monster_Type_Name( col ), [ self.visible_sprites] )
+                                Enemy( ( x, y ), self.Get_Monster_Type_Name( col ), 
+                                    [ self.visible_sprites], self.obstacle_sprites )
     
     def create_player( self, pos ):
         self.player = Player( pos, [ self.visible_sprites ], Player_Sprites_Types.PLAYER_TEST, self.obstacle_sprites )
@@ -67,6 +68,7 @@ class Level:
         #self.visible_sprites.draw( self.display_surface )
         self.visible_sprites.custom_draw( self.player )
         self.visible_sprites.update()
+        # self.visible_sprites.enemy_update()
         self.ui.display()
 
 
@@ -99,3 +101,8 @@ class YSortCameraGroup( pygame.sprite.Group ):
             self.display_surface.blit( sprite.image, offset_pos )
             if IGP.GAME_PARAMETERS["DebugMode"] == True:
                 pygame.draw.rect( self.display_surface, STF.BLUE, pygame.Rect( (offset_pos), (sprite.rect.width, sprite.rect.height) ), 1)
+    
+    def enemy_update( self ):
+        enemy_sprites = [ sprite for sprite in self.sprites() if sprite.sprite_type == "enemy" ]
+        for enemy in enemy_sprites:
+            enemy.enemy_update()

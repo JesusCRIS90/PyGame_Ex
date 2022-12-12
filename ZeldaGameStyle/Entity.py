@@ -10,6 +10,8 @@ class Entity( pygame.sprite.Sprite ):
         self.rect = None
         self.hitbox = None
 
+        self.sprite_type = ""
+
         self.frame_index = 0
         self.animation_speed = 0.15
         self.Entity_State = None
@@ -42,5 +44,3 @@ class Entity( pygame.sprite.Sprite ):
                         self.hitbox.bottom = sprite.hitbox.top
                     if self.direction.y < 0:        # Moving Up
                         self.hitbox.top = sprite.hitbox.bottom
-
-    pass
