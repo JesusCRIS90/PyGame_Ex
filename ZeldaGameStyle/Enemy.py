@@ -6,6 +6,7 @@ from Entity import Entity
 from ImageRegister import *
 from Animations import *
 from Player import PlayerStats
+from support import PyGameTimer
 
 
 class Enemy(Entity):
@@ -39,6 +40,12 @@ class Enemy(Entity):
         self.hitbox = self.rect.inflate(0, -10)
         self.obstacle_sprites = obstacle_sprites
 
+        # Others
+        self.attacking_Timer = PyGameTimer( monster_info['attack_cooldown'] )
+        # self.attacking_Timer = PyGameTimer( 400 )
+        self.can_attack = True
+        self.animation_end = False
+
     def get_player_direction( self ):
         enemy_vector = pygame.math.Vector2( self.rect.center )
         player_vector = PlayerStats().GetPlayerPosition()
@@ -62,7 +69,10 @@ class Enemy(Entity):
     def update_status( self ):
         distance = self.get_player_distance()
 
-        if distance <= self.attack_radius:
+        if distance <= self.attack_radius and self.can_attack:
+            if self.status != Entity_States.ATTACKING:
+                self.animation_engine.Reset_FrameIndex() # Check the reason for this
+                pass
             self.status = Entity_States.ATTACKING
         elif distance <= self.notice_radius:
             self.status = Entity_States.MOVING
@@ -72,22 +82,35 @@ class Enemy(Entity):
     def actions( self ):
         
         if self.status == Entity_States.ATTACKING:
-            print( "attack" )
+            if self.can_attack == True:
+                self.attacking_Timer.Start()
         elif self.status == Entity_States.MOVING:
             self.direction = self.get_player_direction()
         else:
             # Make that the Enemy stop moving when player it is outside of its field of vision
             self.direction = pygame.math.Vector2(  )
 
+    def attackCooldown( self ):
+        if self.can_attack == False:
+            if self.attacking_Timer.ElapsedTime_Reach():
+                self.can_attack = True
+
     def animate( self ):
-        self.image = self.animation_engine.animate( self.status, self.enemy_type )
+        animate_sprite, self.animation_end = self.animation_engine.animate( self.status, self.enemy_type )
+        self.image = animate_sprite
         self.rect  = self.image.get_rect( center = self.hitbox.center )
+
+        if self.status == Entity_States.ATTACKING and self.animation_end:
+            self.can_attack = False
+            
+
 
     def update(self):
         self.update_status()
-        self.actions()
         self.move( self.speed )
+        self.actions()
         self.animate()
+        self.attackCooldown()
         
     # Not needed
     def enemy_update( self ):

@@ -124,12 +124,15 @@ class EnemyAnimations( Animations ):
         self.setState( inputType, enemy_type )
         animations_list = self.Get_AnimationList()
 
+        animation_end = False
+
         "Loop over animations_list"
         self.frame_index += self.animation_speed
         if self.frame_index >= len( animations_list ):
+            animation_end = True
             self.frame_index = 0
 
-        return animations_list[ int( self.frame_index ) ]
+        return (animations_list[ int( self.frame_index ) ], animation_end)
 
 
 
@@ -140,6 +143,9 @@ class EnemyAnimations( Animations ):
     def setState( self, inputType:Entity_States, enemy_type:Enemy_Types ):
         self.inputType = inputType
         self.enemy_type = enemy_type
+
+    def Reset_FrameIndex( self ):
+        self.frame_index = 0
 
 
 
