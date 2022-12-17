@@ -11,6 +11,7 @@ from Weapon import PlayerWeapon
 from Animations import *
 from support import PyGameTimer
 from Entity import Entity
+from CollisionManager import CollissionManager
 
 
 WeaponDict = {
@@ -52,6 +53,9 @@ class PlayerStats(  ):
 
     def Get_Energy( self ):
         return self.stats[ "energy" ]
+    
+    def Get_Attack( self ):
+        return self.stats[ "attack" ]
     
     def Get_Exp( self ):
         return self.stats[ "exp" ]
@@ -156,7 +160,8 @@ class Player( Entity ):
             self.attacking = True
             self.inputType = Entity_States.ATTACKING
             self.Timer.Start()
-            self.weapon = PlayerWeapon( self, self.visible_sprite, 
+            self.weapon = PlayerWeapon( self, [self.visible_sprite, 
+                CollissionManager().get_attackSpriteGroup()],
                 self.GetWeaponSprite( self.weapon_index, self.animations.Get_SeeDirection() ) )
 
         """ Magic Attack - UDER DEVELOPMENT """
@@ -214,6 +219,8 @@ class Player( Entity ):
         self.image = animation
         self.rect  = self.image.get_rect( center = self.hitbox.center )
         self.hitbox = self.rect.inflate( 0, -26 )
+
+        # Flickering
 
     def GetWeaponSprite( self, weapon_index, playerSeeDirection:Player_See_Directions ):
         

@@ -6,6 +6,8 @@ In this file we make the definition of all Setting for the game
 @author: jesus
 """
 
+from ImageRegister import Weapons_Types
+
 # Game Name
 GAME_NAME = "Custom Zelda Game"
 
@@ -80,4 +82,13 @@ monster_data = {
     'bamboo': {'health': 70,'exp':120,'damage':6,'attack_type': 'leaf_attack', 
                'attack_sound':'../audio/attack/slash.wav', "attack_cooldown": 400,
                'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}
+    }
+
+# weapons 
+weapon_data = {
+	Weapons_Types.SWORD:    {'cooldown': 100, 'damage': 15 },
+	Weapons_Types.LANCE:    {'cooldown': 400, 'damage': 30},
+	Weapons_Types.AXE:      {'cooldown': 300, 'damage': 20},
+	Weapons_Types.RAPIER:   {'cooldown': 50,  'damage': 8},
+	Weapons_Types.SAI:      {'cooldown': 80,  'damage': 10}
     }

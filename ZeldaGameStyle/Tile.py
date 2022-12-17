@@ -11,7 +11,11 @@ class Tile(pygame.sprite.Sprite):
         self.image = None
         self.rect = None
         self.hitbox = None
-        self.sprite_type = enum_sprite
+
+        self.sprite_type = "No_Grass"
+        
+        if self._IsGrassSprite_( enum_sprite ) == True:
+            self.sprite_type = "grass"
 
         
         if enum_sprite == Levels_Sprites_Types.NONE_SPRITE:
@@ -23,6 +27,16 @@ class Tile(pygame.sprite.Sprite):
             self.image = ImageRegister().GetSprite( enum_sprite )
             self.rect  = self.image.get_rect( topleft = position )
             self.hitbox = self.rect.inflate( -20, -10 )
+        
+    def _IsGrassSprite_( self, sprite_type ):
+        if sprite_type == Levels_Sprites_Types.GRASS_1:
+            return True
+        if sprite_type == Levels_Sprites_Types.GRASS_2:
+            return True
+        if sprite_type == Levels_Sprites_Types.GRASS_3:
+            return True
+            
+        return False
 
         # if enum_sprite == Levels_Sprites_Types.GRASS_1:
         #     self.image = ImageRegister().GetSprite( Levels_Sprites_Types.GRASS_1 )

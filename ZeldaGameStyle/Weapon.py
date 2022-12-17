@@ -7,6 +7,8 @@ class PlayerWeapon( pygame.sprite.Sprite ):
     def __init__(self, player, groups, weapon_type:Weapons_Types ):
         super().__init__( groups )
 
+        self.sprite_type = 'weapon'
+
         # self.image = pygame.Surface( (40,40) )
         self.image = ImageRegister().GetSprite( weapon_type )
         

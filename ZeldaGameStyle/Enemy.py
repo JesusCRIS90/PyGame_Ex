@@ -5,7 +5,7 @@ from SettingFile import *
 from Entity import Entity
 from ImageRegister import *
 from Animations import *
-from Player import PlayerStats
+from Player import PlayerStats, WeaponDict
 from support import PyGameTimer
 
 
@@ -42,9 +42,13 @@ class Enemy(Entity):
 
         # Others
         self.attacking_Timer = PyGameTimer( monster_info['attack_cooldown'] )
-        # self.attacking_Timer = PyGameTimer( 400 )
         self.can_attack = True
         self.animation_end = False
+
+        # Invencibility
+        self.invencibility_cooldown = 300
+        self.hit_timer = PyGameTimer( self.invencibility_cooldown )
+        self.vulnerable = True
 
     def get_player_direction( self ):
         enemy_vector = pygame.math.Vector2( self.rect.center )
@@ -65,7 +69,6 @@ class Enemy(Entity):
     
         return ( player_vector - enemy_vector ).magnitude()
         
-
     def update_status( self ):
         distance = self.get_player_distance()
 
@@ -90,10 +93,23 @@ class Enemy(Entity):
             # Make that the Enemy stop moving when player it is outside of its field of vision
             self.direction = pygame.math.Vector2(  )
 
+    def hit_reaction( self ):
+        if not self.vulnerable:
+            self.direction *= -self.resistance
+
     def attackCooldown( self ):
         if self.can_attack == False:
             if self.attacking_Timer.ElapsedTime_Reach():
                 self.can_attack = True
+    
+    def vulerability_cooldown( self ):
+        if not self.vulnerable:
+            if self.hit_timer.ElapsedTime_Reach():
+                self.vulnerable = True
+    
+    def cooldown( self ):
+        self.attackCooldown()
+        self.vulerability_cooldown()
 
     def animate( self ):
         animate_sprite, self.animation_end = self.animation_engine.animate( self.status, self.enemy_type )
@@ -102,15 +118,42 @@ class Enemy(Entity):
 
         if self.status == Entity_States.ATTACKING and self.animation_end:
             self.can_attack = False
-            
+        
+        self.flickering()
 
+    def flickering( self ):
+        if not self.vulnerable:
+            # flicker
+            alpha = self.wave_value()
+            self.image.set_alpha( alpha )
+        else:
+            self.image.set_alpha( 255 )
+
+    def get_damage( self, attack_type ):
+        if self.vulnerable:
+            self.direction = self.get_player_direction()
+            if attack_type == "weapon":
+                base_damage = PlayerStats().Get_Attack()
+                weapon_damage = weapon_data[ WeaponDict[ PlayerStats().Get_WeaponIndex() ] ][ "damage" ]
+                self.health -= ( base_damage + weapon_damage )
+            else:
+                "Magic Damage"
+                pass
+            self.hit_timer.Start()
+            self.vulnerable = False
+
+    def check_death( self ):
+        if self.health <= 0:
+            self.kill()
 
     def update(self):
+        self.hit_reaction()
         self.update_status()
         self.move( self.speed )
         self.actions()
         self.animate()
-        self.attackCooldown()
+        self.cooldown()
+        self.check_death()
         
     # Not needed
     def enemy_update( self ):

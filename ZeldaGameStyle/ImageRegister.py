@@ -111,7 +111,6 @@ class Magic_Types( IntEnum ):
     FLAME       = 300
     HEAL        = 301
 
-
 @unique
 class Enemy_Types( IntEnum ):
     BAMBOO      = 400

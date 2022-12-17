@@ -9,6 +9,7 @@ import InGame_Parameters as IGP
 from support import *
 
 from Game_UI import Game_UI
+from CollisionManager import CollissionManager
 
 class Level:
 
@@ -23,10 +24,10 @@ class Level:
         self.player = None
 
         self.create_map()
-        # self.create_player()
 
         # User Interface Create
         self.ui = Game_UI()
+
 
     def create_map( self ):
         
@@ -44,7 +45,10 @@ class Level:
                         if layerName == 'boundary':
                             Tile( (x, y), [ self.obstacle_sprites], Levels_Sprites_Types.NONE_SPRITE )
                         if layerName == 'grass':
-                            Tile( (x, y), [ self.obstacle_sprites, self.visible_sprites], Grass_Dict[ int( col ) ] )
+                            Tile( (x, y), [ self.obstacle_sprites, 
+                                            self.visible_sprites, 
+                                            CollissionManager().get_attackableSpriteGroup()], 
+                                            Grass_Dict[ int( col ) ] )
                         if layerName == 'object':
                             Tile( ( x, y - TILESIZE ), [ self.obstacle_sprites, self.visible_sprites], Object_Dict[ int( col ) ] )
                         if layerName == 'entities':
@@ -52,7 +56,9 @@ class Level:
                                 self.create_player( ( x, y ) )
                             else:
                                 Enemy( ( x, y ), self.Get_Monster_Type_Name( col ), 
-                                    [ self.visible_sprites], self.obstacle_sprites )
+                                    [ self.visible_sprites,
+                                      CollissionManager().get_attackableSpriteGroup()],
+                                      self.obstacle_sprites )
     
     def create_player( self, pos ):
         self.player = Player( pos, [ self.visible_sprites ], Player_Sprites_Types.PLAYER_TEST, self.obstacle_sprites )
@@ -69,6 +75,7 @@ class Level:
         self.visible_sprites.custom_draw( self.player )
         self.visible_sprites.update()
         # self.visible_sprites.enemy_update()
+        CollissionManager().player_attack_logic()
         self.ui.display()
 
 
