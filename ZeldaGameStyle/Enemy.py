@@ -7,6 +7,7 @@ from ImageRegister import *
 from Animations import *
 from Player import PlayerStats, WeaponDict
 from support import PyGameTimer
+from CollisionManager import CollissionManager
 
 
 class Enemy(Entity):
@@ -75,7 +76,6 @@ class Enemy(Entity):
         if distance <= self.attack_radius and self.can_attack:
             if self.status != Entity_States.ATTACKING:
                 self.animation_engine.Reset_FrameIndex() # Check the reason for this
-                pass
             self.status = Entity_States.ATTACKING
         elif distance <= self.notice_radius:
             self.status = Entity_States.MOVING
@@ -87,6 +87,7 @@ class Enemy(Entity):
         if self.status == Entity_States.ATTACKING:
             if self.can_attack == True:
                 self.attacking_Timer.Start()
+                CollissionManager().enemy_attack_logic( self.attack_damage, self.attack_type )
         elif self.status == Entity_States.MOVING:
             self.direction = self.get_player_direction()
         else:

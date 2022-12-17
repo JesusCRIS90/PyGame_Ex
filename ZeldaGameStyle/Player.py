@@ -2,7 +2,6 @@ import pygame
 import SettingFile as STF
 from pygame.sprite import Group
 from ImageRegister import *
-import InGame_Parameters as IGP
 from pygame.math import Vector2
 from debug import *
 from enum import unique, IntEnum
@@ -12,6 +11,7 @@ from Animations import *
 from support import PyGameTimer
 from Entity import Entity
 from CollisionManager import CollissionManager
+from InGame_Parameters import PlayerStats
 
 
 WeaponDict = {
@@ -27,69 +27,6 @@ MagicDict = {
     1   : Magic_Types.HEAL
 }
 
-@CustomSingleton
-class PlayerStats(  ):
-
-    def __init__(self) -> None:
-        self.stats = { 
-            "health": STF.PLAYER_MAX_HEALTH, 
-            "energy": STF.PLAYER_MAX_ENERGY, 
-            "attack": 10, 
-            "magic": 4, 
-            "speed": 6,
-            "exp": 123,
-            "weapon_index": 0,
-            "magic_index": 0,
-            "Switching_Weapon": False,
-            "Switching_Magic": False,
-            "Player_Position": ( 0, 0 )
-            }
-    
-    def Get_Stats( self ):
-        return self.stats
-    
-    def Get_Health( self ):
-        return self.stats[ "health" ]
-
-    def Get_Energy( self ):
-        return self.stats[ "energy" ]
-    
-    def Get_Attack( self ):
-        return self.stats[ "attack" ]
-    
-    def Get_Exp( self ):
-        return self.stats[ "exp" ]
-    
-    def Get_WeaponIndex( self ):
-        return self.stats[ "weapon_index" ]
-    
-    def Set_WeaponIndex( self, index ):
-        self.stats[ "weapon_index" ] = index
-    
-    def Get_SwitchingWeapon( self ):
-        return self.stats[ "Switching_Weapon" ]
-    
-    def Set_SwitchingWeapon( self, val:bool ):
-        self.stats[ "Switching_Weapon" ] = val
-    
-    def Get_MagicIndex( self ):
-        return self.stats[ "magic_index" ]
-    
-    def Set_MagicIndex( self, index ):
-        self.stats[ "magic_index" ] = index
-    
-    def Get_SwitchingMagic( self ):
-        return self.stats[ "Switching_Magic" ]
-    
-    def Set_SwitchingMagic( self, val:bool ):
-        self.stats[ "Switching_Magic" ] = val
-    
-    def GetPlayerPosition( self ):
-        return self.stats[ "Player_Position" ]
-    
-    def SetPlayerPosition( self, position ):
-        self.stats[ "Player_Position" ] = position
-
 
 class Player( Entity ):
 
@@ -104,7 +41,7 @@ class Player( Entity ):
         self.Magic_Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
 
         # self.direction = pygame.math.Vector2()
-        self.speed = 5
+        self.speed = 6
 
         self.attacking = False
         
@@ -122,6 +59,11 @@ class Player( Entity ):
         self.animations = PlayerAnimations()
 
         self.visible_sprite = groups
+
+        # Invencibility
+        self.invencibility_cooldown = 500
+        self.hurt_timer = PyGameTimer( self.invencibility_cooldown )
+        self.vulnerable = True
 
         if enum_sprite == Player_Sprites_Types.PLAYER_TEST:
             self.image = ImageRegister().GetSprite( Player_Sprites_Types.PLAYER_TEST )
@@ -213,7 +155,15 @@ class Player( Entity ):
         if self.switching_magic:
             if self.Magic_Timer.ElapsedTime_Reach() == True:
                 self.switching_magic = False
-                
+        
+        self.vulnerability_cooldown()
+
+    def vulnerability_cooldown( self ):
+        if self.vulnerable == False:
+            if self.hurt_timer.ElapsedTime_Reach():
+                self.vulnerable = True
+                PlayerStats().SetPlayerVulnerable( True )
+
     def animate( self ):
         animation = self.animations.animate( self.direction, self.inputType )
         self.image = animation
@@ -221,6 +171,15 @@ class Player( Entity ):
         self.hitbox = self.rect.inflate( 0, -26 )
 
         # Flickering
+        self.flickering()
+
+    def flickering( self ):
+        if not self.vulnerable:
+            # flicker
+            alpha = self.wave_value()
+            self.image.set_alpha( alpha )
+        else:
+            self.image.set_alpha( 255 )
 
     def GetWeaponSprite( self, weapon_index, playerSeeDirection:Player_See_Directions ):
         
@@ -302,6 +261,13 @@ class Player( Entity ):
         PlayerStats().Set_MagicIndex( self.magic_index )
         PlayerStats().Set_SwitchingMagic( self.switching_magic )
         PlayerStats().SetPlayerPosition( self.rect.center )
+        
+        # The player has been damage, so activate vulnerability timer
+        if PlayerStats().GetPlayerVulnerable() == False:
+            self.vulnerable = False
+        else:
+            self.hurt_timer.Start()
+
 
     def update( self ):
         self.input()

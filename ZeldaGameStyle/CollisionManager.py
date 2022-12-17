@@ -1,5 +1,6 @@
 import pygame
 from support import CustomSingleton
+from InGame_Parameters import PlayerStats
 
 
 @CustomSingleton
@@ -28,3 +29,15 @@ class CollissionManager:
                             target_sprite.kill()
                         else:
                             target_sprite.get_damage( attack_sprite.sprite_type )
+    
+    # Called -> "damage_player"
+    def enemy_attack_logic( self, damage_amount, attack_type ):
+        if PlayerStats().GetPlayerVulnerable():
+            
+            # Calculate New Player Life
+            player_health = PlayerStats().Get_Health()
+            player_health -= damage_amount
+            PlayerStats().Set_Health( player_health )
+            
+            # Making Player Invulnerable
+            PlayerStats().SetPlayerVulnerable( False )
