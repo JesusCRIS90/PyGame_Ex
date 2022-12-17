@@ -114,7 +114,6 @@ class PlayerAnimations( Animations ):
     def Get_SeeDirection( self ):
         return self.SeeDirection
 
-
 class EnemyAnimations( Animations ):
     def __init__(self):
         super().__init__()
@@ -146,7 +145,6 @@ class EnemyAnimations( Animations ):
 
     def Reset_FrameIndex( self ):
         self.frame_index = 0
-
 
 
 def Translate2EnemySprite(enemy_type: Enemy_Types, state: Entity_States):

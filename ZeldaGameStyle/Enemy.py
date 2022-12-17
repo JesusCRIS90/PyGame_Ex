@@ -8,6 +8,7 @@ from Animations import *
 from Player import PlayerStats, WeaponDict
 from support import PyGameTimer
 from CollisionManager import CollissionManager
+from ParticleEffects import ParticleEffect
 
 
 class Enemy(Entity):
@@ -15,6 +16,9 @@ class Enemy(Entity):
     def __init__(self, position, enemy_type, groups, obstacle_sprites):
         super().__init__(groups)
         monster_info = monster_data[enemy_type]
+
+        # Sprites
+        self.visible_sprites = groups[ 0 ]
 
         # General Stats
         self.sprite_type = "enemy"
@@ -146,6 +150,7 @@ class Enemy(Entity):
     def check_death( self ):
         if self.health <= 0:
             self.kill()
+            ParticleEffect( [ self.visible_sprites ], self.rect.center, Get_EnemyDeath_Animation( self.enemy_type ) )
 
     def update(self):
         self.hit_reaction()
@@ -161,3 +166,16 @@ class Enemy(Entity):
         self.update_status()
 
 
+def Get_EnemyDeath_Animation( enemyType:Enemy_Types ):
+    
+    if enemyType == Enemy_Types.BAMBOO:
+        return Particle_Sprites.BAMBOO_DEATH
+    
+    if enemyType == Enemy_Types.SPIRIT:
+        return Particle_Sprites.SPIRIT_DEATH
+    
+    if enemyType == Enemy_Types.RACCOON:
+        return Particle_Sprites.RACOON_DEATH
+    
+    if enemyType == Enemy_Types.SQUID:
+        return Particle_Sprites.SQUID_DEATH

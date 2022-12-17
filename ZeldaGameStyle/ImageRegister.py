@@ -13,6 +13,7 @@ from typing import overload
 import copy
 from support import import_folder
 from support import CustomSingleton
+from random import randint
 
 """ ENUMS FOR IMAGES """
 """"
@@ -137,6 +138,20 @@ class Enemy_Sprites( IntEnum ):
     SQUID_MOVE      = 420
     SQUID_IDLE      = 421
 
+@unique
+class Particle_Sprites( IntEnum ):
+    LEAF_BREAK      = 500
+    
+    CLAW            = 501
+    SLASH           = 502
+    SPARKLE         = 503
+    THUNDER         = 504
+    LEAF_ATTACK     = 505
+
+    SQUID_DEATH     = 506
+    RACOON_DEATH    = 507
+    SPIRIT_DEATH    = 508
+    BAMBOO_DEATH    = 509
 
 
 Grass_Dict = {
@@ -176,6 +191,13 @@ Enemy_Dict = {
     "bamboo"    : Enemy_Types.BAMBOO
 }
 
+Particles_EnemiesAttack_Dict = {
+    "slash"         : Particle_Sprites.SLASH,
+    "claw"          : Particle_Sprites.CLAW,
+    "thunder"       : Particle_Sprites.THUNDER,
+    "leaf_attack"   : Particle_Sprites.LEAF_ATTACK
+}
+
 @CustomSingleton
 class ImageRegister( ):
     
@@ -189,6 +211,7 @@ class ImageRegister( ):
         self._Load_Weapons_Sprites_()
         self._Load_Magic_Sprites_()
         self._Load_Enemies_Sprites_()
+        self._Load_ParticleEffects_Sprites_()
 
                 
     def _Load_Player_Sprites_( self ):
@@ -296,6 +319,38 @@ class ImageRegister( ):
         self.Sprite_Dictionary.update( { Enemy_Sprites.SQUID_ATTACK:   import_folder( "Assets/Monsters/squid/attack" ) } )
         self.Sprite_Dictionary.update( { Enemy_Sprites.SQUID_MOVE:     import_folder( "Assets/Monsters/squid/move" ) } )
         self.Sprite_Dictionary.update( { Enemy_Sprites.SQUID_IDLE:     import_folder( "Assets/Monsters/squid/idle" ) } )
+    
+    def _Load_ParticleEffects_Sprites_( self ):
+        
+        # Loading Leaf Breaking Particles
+        self.Sprite_Dictionary.update( { Particle_Sprites.LEAF_BREAK: [ 
+            import_folder( "Assets/Particles/breakingGrass/leaf1" ),
+            import_folder( "Assets/Particles/breakingGrass/leaf2" ),
+            import_folder( "Assets/Particles/breakingGrass/leaf3" ),
+            import_folder( "Assets/Particles/breakingGrass/leaf4" ),
+            import_folder( "Assets/Particles/breakingGrass/leaf5" ),
+            import_folder( "Assets/Particles/breakingGrass/leaf6" ),
+            reflect_images( import_folder( "Assets/Particles/breakingGrass/leaf1" ) ),
+            reflect_images( import_folder( "Assets/Particles/breakingGrass/leaf2" ) ),
+            reflect_images( import_folder( "Assets/Particles/breakingGrass/leaf3" ) ),
+            reflect_images( import_folder( "Assets/Particles/breakingGrass/leaf4" ) ),
+            reflect_images( import_folder( "Assets/Particles/breakingGrass/leaf5" ) ),
+            reflect_images( import_folder( "Assets/Particles/breakingGrass/leaf6" ) ) ] 
+            } )
+
+        # Loading Enemies Attacking Particles
+        self.Sprite_Dictionary.update( { Particle_Sprites.CLAW:         import_folder( "Assets/Particles/enemiesAttack/claw" ) } )
+        self.Sprite_Dictionary.update( { Particle_Sprites.LEAF_ATTACK:  import_folder( "Assets/Particles/enemiesAttack/leaf_attack" ) } )
+        self.Sprite_Dictionary.update( { Particle_Sprites.SLASH:        import_folder( "Assets/Particles/enemiesAttack/slash" ) } )
+        self.Sprite_Dictionary.update( { Particle_Sprites.THUNDER:      import_folder( "Assets/Particles/enemiesAttack/thunder" ) } )
+        self.Sprite_Dictionary.update( { Particle_Sprites.SLASH:        import_folder( "Assets/Particles/enemiesAttack/sparkle" ) } )
+
+        # Loading Enemies Death Particles
+        self.Sprite_Dictionary.update( { Particle_Sprites.BAMBOO_DEATH:  import_folder( "Assets/Particles/enemiesDeath/bamboo" ) } )
+        self.Sprite_Dictionary.update( { Particle_Sprites.SPIRIT_DEATH:  import_folder( "Assets/Particles/enemiesDeath/nova" ) } )
+        self.Sprite_Dictionary.update( { Particle_Sprites.RACOON_DEATH:  import_folder( "Assets/Particles/enemiesDeath/raccoon" ) } )
+        self.Sprite_Dictionary.update( { Particle_Sprites.SQUID_DEATH:   import_folder( "Assets/Particles/enemiesDeath/smoke_orange" ) } )
+
         
     @overload
     def GetSprite( self, enum_sprite:Levels_Sprites_Types ):
@@ -313,8 +368,16 @@ class ImageRegister( ):
     def GetSprite( self, enum_sprite:Enemy_Sprites ):
         return self.Sprite_Dictionary[ enum_sprite ]
     
+    @overload
+    def GetSprite( self, enum_sprite:Particle_Sprites ):
+        return self.Sprite_Dictionary[ enum_sprite ]
+    
     def GetSprite( self, enum_sprite ):
         return self.Sprite_Dictionary[ enum_sprite ]
+
+
+def reflect_images( frames ):    
+    return [ pygame.transform.flip( frame, True, False ) for frame in frames ]
 
 
 

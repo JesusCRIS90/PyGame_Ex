@@ -35,6 +35,8 @@ class Level:
         
         for style, layout in layouts.items():
             self.create_layer( style, layout )
+        
+        CollissionManager().set_VisibleSprite( self.visible_sprites )
 
         
     def create_layer( self, layerName:str, layer:list ):

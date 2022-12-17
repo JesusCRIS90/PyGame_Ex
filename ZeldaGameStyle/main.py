@@ -10,6 +10,13 @@ ZELDA-STYLE GAME USING PYGAME LIBRARY
 from CustomZeldaGame import *
 
 
+# import pygame
+# from ImageRegister import *
+# from Game import Game
+
 if __name__ == '__main__':
     game = ZeldaGame().RunGame()
 
+# game = Game()
+# leaf_break = ImageRegister().GetSprite( Particle_Sprites.LEAF_BREAK )
+# animation_list = leaf_break[ randint( 0, len( leaf_break ) - 1 ) ]
