@@ -153,6 +153,10 @@ class Particle_Sprites( IntEnum ):
     SPIRIT_DEATH    = 508
     BAMBOO_DEATH    = 509
 
+    AURA_SPELL      = 510
+    HEAL_SPELL      = 511
+    FLAME_SPELL     = 512
+
 
 Grass_Dict = {
     8   : Levels_Sprites_Types.GRASS_1,
@@ -350,6 +354,11 @@ class ImageRegister( ):
         self.Sprite_Dictionary.update( { Particle_Sprites.SPIRIT_DEATH:  import_folder( "Assets/Particles/enemiesDeath/nova" ) } )
         self.Sprite_Dictionary.update( { Particle_Sprites.RACOON_DEATH:  import_folder( "Assets/Particles/enemiesDeath/raccoon" ) } )
         self.Sprite_Dictionary.update( { Particle_Sprites.SQUID_DEATH:   import_folder( "Assets/Particles/enemiesDeath/smoke_orange" ) } )
+
+        # Loading Spells Particles
+        self.Sprite_Dictionary.update( { Particle_Sprites.AURA_SPELL:  import_folder( "Assets/Particles/aura" ) } )
+        self.Sprite_Dictionary.update( { Particle_Sprites.HEAL_SPELL:  import_folder( "Assets/Particles/heal/frames" ) } )
+        self.Sprite_Dictionary.update( { Particle_Sprites.FLAME_SPELL:  import_folder( "Assets/Particles/flame/frames" ) } )
 
         
     @overload

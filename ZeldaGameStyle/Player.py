@@ -12,6 +12,7 @@ from support import PyGameTimer
 from Entity import Entity
 from CollisionManager import CollissionManager
 from InGame_Parameters import PlayerStats
+from MagicSpells import MagicSpells
 
 
 WeaponDict = {
@@ -39,6 +40,8 @@ class Player( Entity ):
         self.Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
         self.Weapon_Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
         self.Magic_Timer = PyGameTimer( STF.ELAPSED_PLAYER_ATTACK_TIME )
+
+        self.Spell_Engine = MagicSpells()
 
         # self.direction = pygame.math.Vector2()
         self.speed = 6
@@ -111,7 +114,7 @@ class Player( Entity ):
             self.attacking = True
             self.inputType = Entity_States.ATTACKING
             self.Timer.Start()
-            print("Magic")
+            self.use_magic()
 
         """ Switching Weapon """
         if keys[ pygame.K_q ] and not self.switching_weapon:
@@ -125,7 +128,7 @@ class Player( Entity ):
             print("Switching Weapon")
 
         
-        """ Switching Weapon """
+        """ Switching Magic Spell """
         if keys[ pygame.K_e ] and not self.switching_magic:
             
             self.magic_index += 1
@@ -135,6 +138,25 @@ class Player( Entity ):
             self.switching_magic = True
             self.Magic_Timer.Start()
             print("Switching Magic")
+    
+    def use_magic( self ):
+        
+        player_pos = self.GetPlayerPosition()
+
+        if MagicDict[ self.magic_index ] == Magic_Types.HEAL:
+            self.Spell_Engine.heal( [self.visible_sprite], player_pos, magic_data["heal"] )
+            print("Healing")
+        
+        if MagicDict[ self.magic_index ] == Magic_Types.FLAME:
+            print("Flaming")
+            pass
+        
+        pass
+
+    def energy_recovery( self ):
+        energy = PlayerStats().Get_Energy()
+        energy += STF.PLAYER_RECOVERY_ENERGY
+        PlayerStats().Set_Energy( energy )
     
     def destroy_weapon( self ):
         if self.weapon != None:
@@ -268,6 +290,8 @@ class Player( Entity ):
         else:
             self.hurt_timer.Start()
 
+    def GetPlayerPosition( self ):
+        return self.rect.center
 
     def update( self ):
         self.input()
@@ -275,6 +299,7 @@ class Player( Entity ):
         self.animate()
         self.move( self.speed )
         self.Update_Player_Stats()
+        self.energy_recovery()
 
         # if IGP.GAME_PARAMETERS["DebugMode"] == True:
         #     pygame.draw.rect( pygame.display.get_surface(), STF.GREEN, self.rect, 1)

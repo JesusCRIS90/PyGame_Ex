@@ -28,7 +28,6 @@ class Level:
         # User Interface Create
         self.ui = Game_UI()
 
-
     def create_map( self ):
         
         layouts = load_layers_map( "Assets/WorldMap/MapLayers/MapLayers.json" )
@@ -38,7 +37,6 @@ class Level:
         
         CollissionManager().set_VisibleSprite( self.visible_sprites )
 
-        
     def create_layer( self, layerName:str, layer:list ):
         for row_index,row in enumerate( layer ):
                 for col_index, col in enumerate( row ):
@@ -70,7 +68,6 @@ class Level:
         elif col_pos    == "391":  return "spirit"
         elif col_pos    == "392":  return "raccoon"
         else:                      return "squid"
-
 
     def run( self ):
         #self.visible_sprites.draw( self.display_surface )

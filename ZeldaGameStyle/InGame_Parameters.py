@@ -18,8 +18,8 @@ class PlayerStats(  ):
 
     def __init__(self) -> None:
         self.stats = { 
-            "health": STF.PLAYER_MAX_HEALTH, 
-            "energy": STF.PLAYER_MAX_ENERGY, 
+            "health": STF.PLAYER_MAX_HEALTH * 0.5, 
+            "energy": STF.PLAYER_MAX_ENERGY * 0.9, 
             "attack": 10, 
             "magic": 4, 
             "speed": 6,
@@ -45,6 +45,11 @@ class PlayerStats(  ):
 
     def Get_Energy( self ):
         return self.stats[ "energy" ]
+    
+    def Set_Energy( self, value ):
+        if value <= 0: value = 0
+        if value >= STF.PLAYER_MAX_ENERGY: value = STF.PLAYER_MAX_ENERGY
+        self.stats[ "energy" ] = value
     
     def Get_Attack( self ):
         return self.stats[ "attack" ]

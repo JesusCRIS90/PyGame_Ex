@@ -59,11 +59,18 @@ ITEM_BOX_SIZE       = 80
 # PLAYER SETTINGS
 PLAYER_MAX_HEALTH = HEALTH_BAR_WIDTH
 PLAYER_MAX_ENERGY = ENERGY_BAR_WIDTH
+PLAYER_RECOVERY_ENERGY = 0.025
 
 # Setting Font
 FONT_NAME = "Assets/Font/joystix.ttf"
 FONT_SIZE = 18
 
+
+# magic
+magic_data = {
+	'flame': {'strength': 5,'cost': 20},
+	'heal' : {'strength': 20,'cost': 10}
+    }
 
 # enemy
 monster_data = {
