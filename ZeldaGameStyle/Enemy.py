@@ -142,8 +142,9 @@ class Enemy(Entity):
                 weapon_damage = weapon_data[ WeaponDict[ PlayerStats().Get_WeaponIndex() ] ][ "damage" ]
                 self.health -= ( base_damage + weapon_damage )
             else:
-                "Magic Damage"
-                pass
+                base_damage = PlayerStats().Get_Attack()
+                magic_damage = magic_data[ "flame" ]["strength"]
+                self.health -= ( base_damage + magic_damage )
             self.hit_timer.Start()
             self.vulnerable = False
 

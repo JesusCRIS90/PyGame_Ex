@@ -125,7 +125,6 @@ class Player( Entity ):
 
             self.switching_weapon = True
             self.Weapon_Timer.Start()
-            print("Switching Weapon")
 
         
         """ Switching Magic Spell """
@@ -137,7 +136,6 @@ class Player( Entity ):
 
             self.switching_magic = True
             self.Magic_Timer.Start()
-            print("Switching Magic")
     
     def use_magic( self ):
         
@@ -145,13 +143,10 @@ class Player( Entity ):
 
         if MagicDict[ self.magic_index ] == Magic_Types.HEAL:
             self.Spell_Engine.heal( [self.visible_sprite], player_pos, magic_data["heal"] )
-            print("Healing")
         
         if MagicDict[ self.magic_index ] == Magic_Types.FLAME:
-            print("Flaming")
-            pass
-        
-        pass
+            self.Spell_Engine.flame( [ self.visible_sprite, CollissionManager().get_attackSpriteGroup() ],
+                                 player_pos, magic_data["flame"] )
 
     def energy_recovery( self ):
         energy = PlayerStats().Get_Energy()
@@ -283,6 +278,7 @@ class Player( Entity ):
         PlayerStats().Set_MagicIndex( self.magic_index )
         PlayerStats().Set_SwitchingMagic( self.switching_magic )
         PlayerStats().SetPlayerPosition( self.rect.center )
+        PlayerStats().SetPlayerSeeDirection( self.animations.Get_SeeDirection() )
         
         # The player has been damage, so activate vulnerability timer
         if PlayerStats().GetPlayerVulnerable() == False:

@@ -11,6 +11,7 @@ This file contain the main "in-game" parameters relative to the game
 from enum import unique, IntEnum
 from support import *
 import SettingFile as STF
+from Animations import Player_See_Directions
 
 
 @CustomSingleton
@@ -21,7 +22,7 @@ class PlayerStats(  ):
             "health": STF.PLAYER_MAX_HEALTH * 0.5, 
             "energy": STF.PLAYER_MAX_ENERGY * 0.9, 
             "attack": 10, 
-            "magic": 4, 
+            "magic": 8, 
             "speed": 6,
             "exp": 123,
             "weapon_index": 0,
@@ -29,6 +30,7 @@ class PlayerStats(  ):
             "Switching_Weapon": False,
             "Switching_Magic": False,
             "Player_Position": ( 0, 0 ),
+            "PlayerSeeDirection": Player_See_Directions.DOWN,
             "PlayerIsVulnerable": True,
             }
     
@@ -86,6 +88,12 @@ class PlayerStats(  ):
     
     def SetPlayerPosition( self, position ):
         self.stats[ "Player_Position" ] = position
+    
+    def GetPlayerSeeDirection( self ):
+        return self.stats[ "PlayerSeeDirection" ]
+
+    def SetPlayerSeeDirection( self, value ):
+        self.stats[ "PlayerSeeDirection" ] = value
     
     def GetPlayerVulnerable( self ):
         return self.stats[ "PlayerIsVulnerable" ]

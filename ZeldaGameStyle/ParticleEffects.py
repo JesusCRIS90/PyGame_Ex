@@ -11,6 +11,7 @@ class ParticleEffect( pygame.sprite.Sprite ):
         self.frame_index = 0
         self.animation_speed = 0.15
         self.particle_type = type
+        self.sprite_type = "magic"
 
         self.animation_frames = self.Get_AnimationList()
         self.image = self.animation_frames[ int( self.frame_index ) ]
