@@ -27,6 +27,8 @@ class Game():
     
         self.__SetGameName__()
         self.__Init_Clock_Game__()
+
+        self.main_sound = None
         
     
     def __SetGameName__( self ):

@@ -10,6 +10,7 @@ from support import PyGameTimer
 from CollisionManager import CollissionManager
 from ParticleEffects import ParticleEffect
 
+from GameSoundManager import *
 
 class Enemy(Entity):
 
@@ -92,6 +93,7 @@ class Enemy(Entity):
             if self.can_attack == True:
                 self.attacking_Timer.Start()
                 CollissionManager().enemy_attack_logic( self.attack_damage, self.attack_type )
+                GameSoundManager().GetSound( Get_SoundEnemy_Attack( self.enemy_type ) ).play()
         elif self.status == Entity_States.MOVING:
             self.direction = self.get_player_direction()
         else:
@@ -137,6 +139,7 @@ class Enemy(Entity):
     def get_damage( self, attack_type ):
         if self.vulnerable:
             self.direction = self.get_player_direction()
+            GameSoundManager().GetSound( SoundEffects_Types.ENEMY_HIT ).play()
             if attack_type == "weapon":
                 base_damage = PlayerStats().Get_Attack()
                 weapon_damage = weapon_data[ WeaponDict[ PlayerStats().Get_WeaponIndex() ] ][ "damage" ]
@@ -152,7 +155,9 @@ class Enemy(Entity):
         if self.health <= 0:
             self.kill()
             ParticleEffect( [ self.visible_sprites ], self.rect.center, Get_EnemyDeath_Animation( self.enemy_type ) )
-
+            PlayerStats().Increase_Exp( self.exp )
+            GameSoundManager().GetSound( SoundEffects_Types.DEATH ).play()
+        
     def update(self):
         self.hit_reaction()
         self.update_status()
@@ -180,3 +185,17 @@ def Get_EnemyDeath_Animation( enemyType:Enemy_Types ):
     
     if enemyType == Enemy_Types.SQUID:
         return Particle_Sprites.SQUID_DEATH
+
+def Get_SoundEnemy_Attack( enemyType:Enemy_Types ):
+
+    if enemyType == Enemy_Types.BAMBOO:
+        return SoundEffects_Types.SLASH
+    
+    if enemyType == Enemy_Types.SPIRIT:
+        return SoundEffects_Types.FIREBALL
+    
+    if enemyType == Enemy_Types.RACCOON:
+        return SoundEffects_Types.CLAW
+    
+    if enemyType == Enemy_Types.SQUID:
+        return SoundEffects_Types.SLASH

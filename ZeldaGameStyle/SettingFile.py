@@ -66,6 +66,15 @@ FONT_NAME = "Assets/Font/joystix.ttf"
 FONT_SIZE = 18
 
 
+HITBOX_OFFSET = {
+	
+    'player': -26,
+	'object': -40,
+	'grass': -10,
+	'invisible': 0
+
+}
+
 # magic
 magic_data = {
 	'flame': {'strength': 5,'cost': 20},

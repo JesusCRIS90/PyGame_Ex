@@ -307,8 +307,8 @@ class ImageRegister( ):
         self.Sprite_Dictionary.update( { Magic_Types.HEAL:    pygame.image.load("Assets/Particles/heal/heal.png").convert_alpha() } )
 
     def _Load_Enemies_Sprites_( self ):
-        
         self.Sprite_Dictionary.update( { Enemy_Sprites.BAMBOO_ATTACK:   import_folder( "Assets/Monsters/bamboo/attack" ) } )
+        
         self.Sprite_Dictionary.update( { Enemy_Sprites.BAMBOO_MOVE:     import_folder( "Assets/Monsters/bamboo/move" ) } )
         self.Sprite_Dictionary.update( { Enemy_Sprites.BAMBOO_IDLE:     import_folder( "Assets/Monsters/bamboo/idle" ) } )
 

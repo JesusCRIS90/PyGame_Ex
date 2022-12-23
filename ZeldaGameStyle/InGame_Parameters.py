@@ -58,6 +58,9 @@ class PlayerStats(  ):
     
     def Get_Exp( self ):
         return self.stats[ "exp" ]
+        
+    def Increase_Exp( self, amount ):
+        self.stats[ "exp" ] += amount
     
     def Get_WeaponIndex( self ):
         return self.stats[ "weapon_index" ]

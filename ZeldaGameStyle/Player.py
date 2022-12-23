@@ -13,6 +13,7 @@ from Entity import Entity
 from CollisionManager import CollissionManager
 from InGame_Parameters import PlayerStats
 from MagicSpells import MagicSpells
+from GameSoundManager import *
 
 
 WeaponDict = {
@@ -108,8 +109,9 @@ class Player( Entity ):
             self.weapon = PlayerWeapon( self, [self.visible_sprite, 
                 CollissionManager().get_attackSpriteGroup()],
                 self.GetWeaponSprite( self.weapon_index, self.animations.Get_SeeDirection() ) )
+            GameSoundManager().GetSound( SoundEffects_Types.PLAYER_ATTACK ).play()
 
-        """ Magic Attack - UDER DEVELOPMENT """
+        """ Magic Attack """
         if keys[ pygame.K_LCTRL ] and not self.attacking:
             self.attacking = True
             self.inputType = Entity_States.ATTACKING
@@ -185,7 +187,7 @@ class Player( Entity ):
         animation = self.animations.animate( self.direction, self.inputType )
         self.image = animation
         self.rect  = self.image.get_rect( center = self.hitbox.center )
-        self.hitbox = self.rect.inflate( 0, -26 )
+        self.hitbox = self.rect.inflate( -6, STF.HITBOX_OFFSET["player"] )
 
         # Flickering
         self.flickering()

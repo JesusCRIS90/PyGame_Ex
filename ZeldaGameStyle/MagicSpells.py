@@ -5,6 +5,7 @@ from ImageRegister import *
 from ParticleEffects import ParticleEffect
 from Animations import Player_See_Directions
 from random import randint
+from GameSoundManager import *
 
 
 class MagicSpells:
@@ -22,6 +23,7 @@ class MagicSpells:
             player_health += spell_stats["strength"]
             PlayerStats().Set_Health( player_health )
             self._reduceEnergy_( spell_stats["cost"] )
+            GameSoundManager().GetSound( SoundEffects_Types.PLAYER_HEAL_SPELL ).play()
             
             # Creating Particles Animations
             ParticleEffect( groups, position, Particle_Sprites.AURA_SPELL )
@@ -46,6 +48,7 @@ class MagicSpells:
                 ParticleEffect( groups, ( x_pos, y_pos ), Particle_Sprites.FLAME_SPELL )
 
             self._reduceEnergy_( spell_stats["cost"] )
+            GameSoundManager().GetSound( SoundEffects_Types.PLAYER_FLAME_SPELL ).play()
 
     def _reduceEnergy_( self, cost ):
         energy = PlayerStats().Get_Energy()
