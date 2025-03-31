@@ -18,12 +18,12 @@ python3 -m venv <name-venv>
 
    * Activation on Windows
    ```bash
-   venv\Scripts\activate
+   <name-venv>\Scripts\activate
    ```
 
    * Activation on Mac/Linux
    ```bash
-   source venv/bin/activate
+   source <name-venv>/bin/activate
    ```
 
    * Desactivate. On terminal execute:
