@@ -1,0 +1,7 @@
+.spyproject/
+
+# Ignore the "pyg-ex" folder
+pyg-ex/
+
+# Ignore all "__pycache__" folders recursively
+**/__pycache__/

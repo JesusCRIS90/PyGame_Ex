@@ -365,7 +365,7 @@ class ZombieGame( SKG.Game ):
                     
                         
    
-my_game = ZombieGame();     my_game.RunGame()
+# my_game = ZombieGame();     my_game.RunGame()
 
 
 

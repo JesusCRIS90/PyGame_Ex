@@ -1,4 +1,4 @@
-from CustomZeldaGame import ZeldaGame as Game
+from SnakeGame import SnakeGame as Game
 
 def main():
     Game().RunGame()

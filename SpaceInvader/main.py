@@ -1,4 +1,4 @@
-from CustomZeldaGame import ZeldaGame as Game
+from SpaceInvader import SpaceInvader as Game
 
 def main():
     Game().RunGame()

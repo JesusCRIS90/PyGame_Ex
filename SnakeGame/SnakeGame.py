@@ -103,4 +103,4 @@ class SnakeGame( SKG.Game ):
 
 # snake_game = SKG.Game(); snake_game.RunGame()
 
-snake_game = SnakeGame(); snake_game.RunGame()
+# snake_game = SnakeGame(); snake_game.RunGame()
